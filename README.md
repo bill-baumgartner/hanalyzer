@@ -1,6 +1,6 @@
-# glyzer
+# hanalyzer
 
-A Clojure library designed to ... well, that part is up to you.
+A reboot of the Hanalyzer prototype using the KaBOB knowledge base as a backend
 
 ## Usage
 
