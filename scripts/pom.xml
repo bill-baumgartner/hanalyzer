@@ -1,0 +1,28 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>edu.ucdenver.ccp</groupId>
+	<artifactId>hanalyzer-kabob</artifactId>
+	<version>kabob</version>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+	<description>The scripts that allow a user to run rules against kabob use Maven.
+                     This pom file allows the scripts to run.</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>edu.ucdenver.ccp</groupId>
+			<artifactId>kabob-build</artifactId>
+			<version>1.3.0-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+                        <groupId>edu.ucdenver.ccp</groupId>
+                        <artifactId>hanalyzer</artifactId>
+                        <version>0.1.0-SNAPSHOT</version>
+                </dependency>
+	</dependencies>
+
+</project>
