@@ -20,7 +20,7 @@
 		</dependency>
 		<dependency>
                         <groupId>edu.ucdenver.ccp</groupId>
-                        <artifactId>hanalyzer</artifactId>
+                        <artifactId>hanalyzer-kabob-layer</artifactId>
                         <version>0.1.0-SNAPSHOT</version>
                 </dependency>
 	</dependencies>
