@@ -25,6 +25,7 @@
                 </dependency>
 	</dependencies>
 
+	<build>
 	<plugins>
 	  <plugin>
         <groupId>com.theoryinpractise</groupId>
@@ -57,6 +58,8 @@
             <testSourceDirectory>test</testSourceDirectory>
           </testSourceDirectories>
         </configuration>
-      </plugin>
+	  </plugin>
+	</plugins>
+      </build>
 
 </project>
