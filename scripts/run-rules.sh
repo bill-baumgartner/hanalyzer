@@ -19,7 +19,7 @@ KB_DATA_DIR=${6:?}
 RULETYPE=${7:?}
 
 OUTPUTDIR=$KB_DATA_DIR/$RULETYPE/
-RULES_RES_DIR=hanalyzer/rules/$RULETYPE/
+RULES_RES_DIR=$RULETYPE/
 
 echo Running rules
 mkdir -p $OUTPUTDIR
