@@ -17,8 +17,8 @@ shared edges between nodes to only those GO concepts that have a Resnik concept 
                    :ns "iaohan" :prefix "HANEDGE_GOBP_"}])
 
   :body ((?/go oboInOwl/hasOBONamespace ["biological_process"])
-         (?/go iaohan/resnik-concept-prob-aael ?prob)
-         (< ?prob 0.01)
+         (?/go iaohan/resnik-concept-prob-aael ?/prob)
+         (< ?/prob 0.01)
          (?/go rdfs/label ?/edgeLabel)
          (?/go_sc rdfs/subClassOf ?/go)
          (?/go_sc rdfs/subClassOf ?/participant_r)
@@ -83,8 +83,8 @@ shared edges between nodes to only those GO concepts that have a Resnik concept 
          (?/to_r owl/someValuesFrom ?/go_sc)
          (?/go_sc rdfs/subClassOf ?/go)
          (?/go rdfs/label ?/edgeLabel)
-         (?/go iaohan/resnik-concept-prob-aael ?prob)
-         (< ?prob 0.01)
+         (?/go iaohan/resnik-concept-prob-aael ?/prob)
+         (< ?/prob 0.01)
 
          (?/loc2 rdfs/subClassOf obo/GO_0051179) ;; GO:localization
          (!= ?/loc ?/loc2)
