@@ -1,5 +1,5 @@
 
-`{:name "jiang-compute-pms"
+`{:name "jiang-compute-pms-go-bp-aael"
   :description "This rule computes 'probability of the minimum subsumer', that is
                 the minimum probability of the parental concepts shared by two
                 concepts. This value is reified into a ProbMinSub instance.
@@ -15,13 +15,17 @@
                                        :eqn ["MIN(" ?/parent_prob ")"]
                                        :group_by [?/c1 ?/c2]}))
 
-  :body ((?/shared_parent oboInOwl/hasOBONamespace ["biological_process"])
+  :body ((?/shared_parent iaohan/resnik-concept-prob-aael ?/parent_prob)
+         (?/shared_parent oboInOwl/hasOBONamespace ["biological_process"])
          (?/c1 [rdfs/subClassOf 1 5] ?/shared_parent) ;; rdfs:subClassOf{1,5}
          (?/c1 oboInOwl/hasOBONamespace ["biological_process"])
          (?/c2 [rdfs/subClassOf 1 5] ?/shared_parent) ;; rdfs:subClassOf{1,5}
          (?/c2 oboInOwl/hasOBONamespace ["biological_process"])
+         (?/c2 rdfs/subClassOf ?/c1)
          (!= ?/c1 ?/c2)
-         (?/shared_parent iaohan/resnik-concept-prob-aael ?/parent_prob))
+         (!= ?/c1 ?/shared_parent)
+         (!= ?/c2 ?/shared_parent))
+         
   
   :reify ([?/pms {:ln (:sha-1 ?/c1 ?/c2)
                  :ns "iaohan" :prefix "PMS_"}])
