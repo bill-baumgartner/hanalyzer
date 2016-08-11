@@ -1,7 +1,8 @@
 
 `{:name "aael-shared-go-bp-edges"
   :description "This rule produces reified edges between two hanalyzer nodes
-  that have GGPs that are annotated with the same GO BP concept."
+  that have GGPs that are annotated with the same GO BP concept. We limit 
+shared edges between nodes to only those GO concepts that have a Resnik concept probability of < 0.01. This prevents links being asserted by very general nodes, e.g. the root biological_process node."
 
   :head (;; creates a reified edge of type iaohan/SharedPathwayEdge that links
          ;; the two hanalyzer nodes that denote GGPs that participate in a shared pathway
@@ -16,6 +17,8 @@
                    :ns "iaohan" :prefix "HANEDGE_GOBP_"}])
 
   :body ((?/go oboInOwl/hasOBONamespace ["biological_process"])
+         (?/go iaohan/resnik-concept-prob-aael ?prob)
+         (< ?prob 0.01)
          (?/go rdfs/label ?/edgeLabel)
          (?/go_sc rdfs/subClassOf ?/go)
          (?/go_sc rdfs/subClassOf ?/participant_r)
@@ -49,7 +52,8 @@
 
 `{:name "aael-shared-go-cc-edges"
   :description "This rule produces reified edges between two hanalyzer nodes
-  that have GGPs that are annotated with the same GO CC concept."
+  that have GGPs that are annotated with the same GO CC concept. We limit 
+shared edges between nodes to only those GO concepts that have a Resnik concept probability of < 0.01. This prevents links being asserted by very general nodes, e.g. the root cellular_component node."
 
   :head (;; creates a reified edge of type iaohan/SharedPathwayEdge that links
          ;; the two hanalyzer nodes that denote GGPs that participate in a shared pathway
@@ -79,6 +83,8 @@
          (?/to_r owl/someValuesFrom ?/go_sc)
          (?/go_sc rdfs/subClassOf ?/go)
          (?/go rdfs/label ?/edgeLabel)
+         (?/go iaohan/resnik-concept-prob-aael ?prob)
+         (< ?prob 0.01)
 
          (?/loc2 rdfs/subClassOf obo/GO_0051179) ;; GO:localization
          (!= ?/loc ?/loc2)
