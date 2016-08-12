@@ -7,9 +7,9 @@
   prevents links being asserted by very general nodes, e.g. the root
   biological_process node."
 
-  :head (;; creates a reified edge of type iaohan/SharedPathwayEdge
+  :head (;; creates a reified edge of type iaohan/SharedGoBpEdge
          ;; that links the two hanalyzer nodes that denote GGPs that
-         ;; participate in a shared pathway
+         ;; participate in the same biological process
          (?/edge rdf/type iaohan/SharedGoBpEdge) 
          (?/edge iaohan/linksNode ?/node1)
          (?/edge iaohan/linksNode ?/node2)
@@ -66,9 +66,9 @@
   prevents links being asserted by very general nodes, e.g. the root
   cellular_component node."
 
-  :head (;; creates a reified edge of type iaohan/SharedPathwayEdge
+  :head (;; creates a reified edge of type iaohan/SharedGoCcEdge
          ;; that links the two hanalyzer nodes that denote GGPs that
-         ;; participate in a shared pathway
+         ;; are known to be colocalized in the same cellular component
          (?/edge rdf/type iaohan/SharedGoCcEdge) 
          (?/edge iaohan/linksNode ?/node1)
          (?/edge iaohan/linksNode ?/node2)
@@ -108,6 +108,93 @@
          (?/of_r2 owl/onProperty obo/RO_0002313) ;; RO:transports_or_maintains_localization_of
          (?/of_r2 owl/someValuesFrom ?/protein_sc2)
          (?/protein_sc2 rdfs/subClassOf ?/protein2)
+         (?/protein2 rdfs/subClassOf ?/taxon_r)
+         (!= ?/protein ?/protein2)
+         (?/node2 iaohan/denotes ?/protein2))
+
+  :options {:magic-prefixes [["franzOption_clauseReorderer" "franz:identity"]
+                             ["franzOption_chunkProcessingAllowed" "franz:yes"]]}
+  }
+
+
+
+`{:name "aael-shared-go-mf-edges"
+  :description "This rule produces reified edges between two hanalyzer
+  nodes that have GGPs that are annotated with the same GO MF
+  concept. We limit shared edges between nodes to only those GO
+  concepts that have a Resnik concept probability of < 0.01. This
+  prevents links being asserted by very general nodes, e.g. the root
+  molecular_function node. Note, because molecular functions are not
+  currently represented on the BIO side of KaBOB, this rule reaches
+  back into the ICE side to grab the requisite information."
+
+  :head (;; creates a reified edge of type iaohan/SharedGoMfEdge
+         ;; that links the two hanalyzer nodes that denote GGPs that
+         ;; participate in the same molecular function
+         (?/edge rdf/type iaohan/SharedGoMfEdge) 
+         (?/edge iaohan/linksNode ?/node1)
+         (?/edge iaohan/linksNode ?/node2)
+         (?/edge iaohan/denotes ?/record) ;; denotes --> ICE is
+                                          ;; unconventional, but since
+                                          ;; we don't represent GO MF
+                                          ;; in BIO world yet this is
+                                          ;; the only means of
+                                          ;; pointing back to the
+                                          ;; source
+         (?/edge iaohan/denotes ?/record2)
+         (?/edge rdfs/label ?/edgeLabel))
+
+  :reify ([?/edge {:ln (:sha-1 iaohan/SharedGoMfEdge ?/node1 ?/node2 ?/go)
+                   :ns "iaohan" :prefix "HANEDGE_GOMF_"}])
+
+  :body ((?/go iaohan/resnik-concept-prob-aael ?/prob)
+         (< ?/prob 0.01)
+         (?/go oboInOwl/hasOBONamespace ["molecular_function"])
+
+         (?/go_ice obo/IAO_0000219 ?/go) ;; IAO:denotes
+         (?/go_id_field obo/IAO_0000219 ?/go_ice) ;; IAO:denotes
+         (?/go_id_field kiao/hasTemplate iaogoa/GpAssociationGoaUniprotFileData_goIDDataField1)
+         (?/record obo/BFO_0000051 ?/go_id_field) ;; BFO:has_part 
+         (?/record obo/BFO_0000051 ?/protein_id_field) ;; BFO:has_part
+         
+         ;; filter out the negations
+         (:optional
+           ((?/record obo/BFO_0000051 ?/qualfv) ; has_part
+            (?/qualfv kiao/hasTemplate
+                      iaogoa/GpAssociationGoaUniprotFileData_qualifierDataField1)
+            (?/qualfv obo/IAO_0000219 ?/qualifier)))
+         (:or (:not (:bound ?/qualifier))
+               (:not (:regex ?/qualifier "^NOT" "i")))
+         
+         (?/protein_id_field kiao/hasTemplate
+                             iaogoa/GpAssociationGoaUniprotFileData_databaseObjectIDDataField1)
+         (?/protein_id_field obo/IAO_0000219 ?/protein_ice) ;; IAO:denotes
+         (?/protein_ice  obo/IAO_0000219 ?/protein) ;; IAO:denotes
+         (?/protein rdfs/subClassOf ?/taxon_r)
+         (?/taxon_r owl/onProperty obo/RO_0002162) ;; in_taxon
+         (?/taxon_r rdf/type owl/Restriction)
+         (?/taxon_r owl/someValuesFrom obo/NCBITaxon_7159) ;; yellow fever mosquito
+         (?/node1 iaohan/denotes ?/protein)
+         (?/go rdfs/label ?/edgeLabel)
+
+         (?/record2 obo/BFO_0000051 ?/go_id_field) ;; BFO:has_part 
+         (!= ?/record ?/record2)
+         (?/record2 obo/BFO_0000051 ?/protein_id_field2) ;; BFO:has_part
+         
+         ;; filter out the negations
+         (:optional
+          ((?/record2 obo/BFO_0000051 ?/qualfv2) ; has_part
+           (?/qualfv2 kiao/hasTemplate
+                      iaogoa/GpAssociationGoaUniprotFileData_qualifierDataField1)
+            (?/qualfv2 obo/IAO_0000219 ?/qualifier2)))
+         (:or (:not (:bound ?/qualifier2))
+              (:not (:regex ?/qualifier2 "^NOT" "i")))
+         
+         (?/protein_id_field2 kiao/hasTemplate
+                              iaogoa/GpAssociationGoaUniprotFileData_databaseObjectIDDataField1)
+         (?/protein_id_field2 obo/IAO_0000219 ?/protein_ice2) ;; IAO:denotes
+         (?/protein_ice2  obo/IAO_0000219 ?/protein2) ;; IAO:denotes
+         (?/protein2 rdfs/subClassOf ?/taxon_r)
          (?/protein2 rdfs/subClassOf ?/taxon_r)
          (!= ?/protein ?/protein2)
          (?/node2 iaohan/denotes ?/protein2))
