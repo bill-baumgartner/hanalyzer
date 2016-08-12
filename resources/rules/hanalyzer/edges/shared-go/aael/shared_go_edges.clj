@@ -16,11 +16,13 @@ shared edges between nodes to only those GO concepts that have a Resnik concept 
   :reify ([?/edge {:ln (:sha-1 iaohan/SharedGoBpEdge ?/node1 ?/node2 ?/go)
                    :ns "iaohan" :prefix "HANEDGE_GOBP_"}])
 
-  :body ((?/go oboInOwl/hasOBONamespace ["biological_process"])
-         (?/go iaohan/resnik-concept-prob-aael ?/prob)
+  :body ((?/go iaohan/resnik-concept-prob-aael ?/prob)
          (< ?/prob 0.01)
+         (?/go oboInOwl/hasOBONamespace ["biological_process"])
          (?/go rdfs/label ?/edgeLabel)
          (?/go_sc rdfs/subClassOf ?/go)
+
+         ;; get an instance of the go concept that has a has_participant restriction
          (?/go_sc rdfs/subClassOf ?/participant_r)
          (?/participant_r rdf/type owl/Restriction)
          (?/participant_r owl/onProperty obo/RO_0000057)
@@ -29,9 +31,11 @@ shared edges between nodes to only those GO concepts that have a Resnik concept 
          (?/protein rdfs/subClassOf ?/taxon_r)
          (?/taxon_r owl/onProperty obo/RO_0002162) ;; in_taxon
          (?/taxon_r rdf/type owl/Restriction)
-         (?/taxon_r owl/someValuesFrom ?/taxon_sc)
-         (?/taxon_sc [rdfs/subClassOf *] obo/NCBITaxon_7159) ;; yellow fever mosquito
+         (?/taxon_r owl/someValuesFrom  obo/NCBITaxon_7159) ;; yellow fever mosquito
+         ;; get the hanalyzer node that denotes the protein
          (?/node1 iaohan/denotes ?/protein)
+
+         ;; get another participant in the process
          (?/go_sc2 rdfs/subClassOf ?/go)
          (!= ?/go_sc ?/go_sc2)
          (?/go_sc2 rdfs/subClassOf ?/participant_r2)
@@ -41,10 +45,10 @@ shared edges between nodes to only those GO concepts that have a Resnik concept 
          (?/protein_sc2 rdfs/subClassOf ?/protein2)
          (!= ?/protein ?/protein2)
          (?/protein2 rdfs/subClassOf ?/taxon_r)
-        
+         ;; get the hanalyzer node that denotes the other participant
          (?/node2 iaohan/denotes ?/protein2))
 
-  :options {:magic-prefixes [;;["franzOption_clauseReorderer" "franz:identity"]
+  :options {:magic-prefixes [["franzOption_clauseReorderer" "franz:identity"]
                              ["franzOption_chunkProcessingAllowed" "franz:yes"]]}
   }
 
@@ -67,7 +71,14 @@ shared edges between nodes to only those GO concepts that have a Resnik concept 
   :reify ([?/edge {:ln (:sha-1 iaohan/SharedGoCcEdge ?/node1 ?/node2 ?/go)
                    :ns "iaohan" :prefix "HANEDGE_GOCC_"}])
 
-  :body ((?/loc rdfs/subClassOf obo/GO_0051179) ;; GO:localization
+  :body ((?/go iaohan/resnik-concept-prob-aael ?/prob)
+         (< ?/prob 0.01)
+         (?/go oboInOwl/hasOBONamespace "cellular_component")
+         (?/go_sc rdfs/subClassOf ?/go)
+         (?/to_r owl/someValuesFrom ?/go_sc)
+         (?/to_r owl/onProperty obo/RO_0002339) ;; RO:has_target_end_location
+         (?/loc rdfs/subClassOf ?/to_r) 
+         (?/loc rdfs/subClassOf obo/GO_0051179) ;; GO:localization
          (?/loc rdfs/subClassOf ?/of_r)
          (?/of_r owl/onProperty obo/RO_0002313) ;; RO:transports_or_maintains_localization_of
          (?/of_r owl/someValuesFrom ?/protein_sc)
@@ -75,32 +86,24 @@ shared edges between nodes to only those GO concepts that have a Resnik concept 
          (?/protein rdfs/subClassOf ?/taxon_r)
          (?/taxon_r owl/onProperty obo/RO_0002162) ;; in_taxon
          (?/taxon_r rdf/type owl/Restriction)
-         (?/taxon_r owl/someValuesFrom ?/taxon_sc)
-         (?/taxon_sc [rdfs/subClassOf *] obo/NCBITaxon_7159) ;; yellow fever mosquito
+         (?/taxon_r owl/someValuesFrom obo/NCBITaxon_7159) ;; yellow fever mosquito
          (?/node1 iaohan/denotes ?/protein)
-         (?/loc rdfs/subClassOf ?/to_r)
-         (?/to_r owl/onProperty obo/RO_0002339) ;; RO:has_target_end_location
-         (?/to_r owl/someValuesFrom ?/go_sc)
-         (?/go_sc rdfs/subClassOf ?/go)
          (?/go rdfs/label ?/edgeLabel)
-         (?/go iaohan/resnik-concept-prob-aael ?/prob)
-         (< ?/prob 0.01)
 
+         (?/go_sc2 rdfs/subClassOf ?/go)
+         (!= ?/go_sc2 ?/go_sc)
+         (?/to_r2 owl/someValuesFrom ?/go_sc2)
+         (?/to_r2 owl/onProperty obo/RO_0002339) ;; RO:has_target_end_location
+         (?/loc2 rdfs/subClassOf ?/to_r2)
          (?/loc2 rdfs/subClassOf obo/GO_0051179) ;; GO:localization
-         (!= ?/loc ?/loc2)
          (?/loc2 rdfs/subClassOf ?/of_r2)
          (?/of_r2 owl/onProperty obo/RO_0002313) ;; RO:transports_or_maintains_localization_of
          (?/of_r2 owl/someValuesFrom ?/protein_sc2)
          (?/protein_sc2 rdfs/subClassOf ?/protein2)
          (?/protein2 rdfs/subClassOf ?/taxon_r)
          (!= ?/protein ?/protein2)
-         (?/node2 iaohan/denotes ?/protein2)
-         (?/loc2 rdfs/subClassOf ?/to_r2)
-         (?/to_r2 owl/onProperty obo/RO_0002339) ;; RO:has_target_end_location
-         (?/to_r2 owl/someValuesFrom ?/go_sc2)
-         (?/go_sc2 rdfs/subClassOf ?/go)
-         )
+         (?/node2 iaohan/denotes ?/protein2))
 
-  :options {:magic-prefixes [;;["franzOption_clauseReorderer" "franz:identity"]
+  :options {:magic-prefixes [["franzOption_clauseReorderer" "franz:identity"]
                              ["franzOption_chunkProcessingAllowed" "franz:yes"]]}
   }
