@@ -210,29 +210,14 @@
     (is (= 2 (get-annotation-count `ex/w source-kb)))
     (is (= 6 (get-annotation-count `ex/x source-kb)))
     (is (= 5 (get-annotation-count `ex/y source-kb)))
-    (is (= 3 (get-annotation-count `ex/z source-kb)))
-
-
-;; triples to a local file.
-     (let [log-kb (output-kb "/tmp/triples.nt")]
-    ;;   ;; add sample triples to the log kb
-       (dorun (map (partial add! log-kb) sample-kb-triples))
-      
-    ;;   (run-forward-rule source-kb log-kb annot-count-rule)
-    ;;   (run-forward-rule source-kb log-kb concept-prob-rule)
-    ;;   (run-forward-rule source-kb log-kb compute-pms-rule)
-    ;;   (run-forward-rule source-kb log-kb jiang-dist-rule)
-       (close log-kb))
-    ))
-
-
+    (is (= 3 (get-annotation-count `ex/z source-kb)))))
 
 (defn get-concept-prob [subject output-kb]
   "queries the kb for the iaohan/resnik-concept-prob for the given subject"
   ('?/count (first (apply list (query output-kb
                                       `((~subject iaohan/resnik-concept-prob-aael ?/count)))))))
 
-(comment
+
 (deftest test-concept-prob-calc
   (let [annot-count-rule (first
                           (filter #(= (:name %) "annotation-counts-go-mf-aael")
@@ -242,12 +227,12 @@
                            (filter #(= (:name %) "resnik-concept-probability-go-mf-aael")
                                          (kabob-load-rules-from-classpath
                                           "rules/hanalyzer/info_content/resnik")))
-        output-kb (test-kb '()) ;; output kb is initialized to empty
         source-kb (test-kb sample-kb-triples)] ;; source kb contains sample triples
 
-    ;; annotation counts are a prerequisite for the concept-probability calculation
-    ;; rule being tested here, so we prepopulate the kb with annotation counts.
-    ;; Note: the annotation count rule is tested in isolation above.
+    ;; annotation counts are a prerequisite for the
+    ;; concept-probability calculation rule being tested here, so we
+    ;; prepopulate the kb with annotation counts.  Note: the
+    ;; annotation count rule is tested in isolation above.
     (run-forward-rule source-kb source-kb annot-count-rule)
 
     (is (= 11 (count (query source-kb
@@ -296,7 +281,7 @@
     ;;   (close log-kb))
     ))
 
-)
+
 
   
 
