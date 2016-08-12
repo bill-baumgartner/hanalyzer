@@ -1,11 +1,15 @@
 
 `{:name "aael-shared-go-bp-edges"
-  :description "This rule produces reified edges between two hanalyzer nodes
-  that have GGPs that are annotated with the same GO BP concept. We limit 
-shared edges between nodes to only those GO concepts that have a Resnik concept probability of < 0.01. This prevents links being asserted by very general nodes, e.g. the root biological_process node."
+  :description "This rule produces reified edges between two hanalyzer
+  nodes that have GGPs that are annotated with the same GO BP
+  concept. We limit shared edges between nodes to only those GO
+  concepts that have a Resnik concept probability of < 0.01. This
+  prevents links being asserted by very general nodes, e.g. the root
+  biological_process node."
 
-  :head (;; creates a reified edge of type iaohan/SharedPathwayEdge that links
-         ;; the two hanalyzer nodes that denote GGPs that participate in a shared pathway
+  :head (;; creates a reified edge of type iaohan/SharedPathwayEdge
+         ;; that links the two hanalyzer nodes that denote GGPs that
+         ;; participate in a shared pathway
          (?/edge rdf/type iaohan/SharedGoBpEdge) 
          (?/edge iaohan/linksNode ?/node1)
          (?/edge iaohan/linksNode ?/node2)
@@ -55,12 +59,16 @@ shared edges between nodes to only those GO concepts that have a Resnik concept 
 
 
 `{:name "aael-shared-go-cc-edges"
-  :description "This rule produces reified edges between two hanalyzer nodes
-  that have GGPs that are annotated with the same GO CC concept. We limit 
-shared edges between nodes to only those GO concepts that have a Resnik concept probability of < 0.01. This prevents links being asserted by very general nodes, e.g. the root cellular_component node."
+  :description "This rule produces reified edges between two hanalyzer
+  nodes that have GGPs that are annotated with the same GO CC
+  concept. We limit shared edges between nodes to only those GO
+  concepts that have a Resnik concept probability of < 0.01. This
+  prevents links being asserted by very general nodes, e.g. the root
+  cellular_component node."
 
-  :head (;; creates a reified edge of type iaohan/SharedPathwayEdge that links
-         ;; the two hanalyzer nodes that denote GGPs that participate in a shared pathway
+  :head (;; creates a reified edge of type iaohan/SharedPathwayEdge
+         ;; that links the two hanalyzer nodes that denote GGPs that
+         ;; participate in a shared pathway
          (?/edge rdf/type iaohan/SharedGoCcEdge) 
          (?/edge iaohan/linksNode ?/node1)
          (?/edge iaohan/linksNode ?/node2)
@@ -73,7 +81,7 @@ shared edges between nodes to only those GO concepts that have a Resnik concept 
 
   :body ((?/go iaohan/resnik-concept-prob-aael ?/prob)
          (< ?/prob 0.01)
-         (?/go oboInOwl/hasOBONamespace "cellular_component")
+         (?/go oboInOwl/hasOBONamespace ["cellular_component"])
          (?/go_sc rdfs/subClassOf ?/go)
          (?/to_r owl/someValuesFrom ?/go_sc)
          (?/to_r owl/onProperty obo/RO_0002339) ;; RO:has_target_end_location
