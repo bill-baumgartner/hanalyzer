@@ -2,8 +2,8 @@
   :description "This rule creates PPIs in BioWorld for protein-protein
   interactions asserted from various sources."
   
-  :head ((?/interaction rdfs/subClassOf obo/GO_0005488) ;interaction
-         (?/interaction rdfs/label ?/interaction_label) ; transfer label to the subclass
+  :head ((?/interaction rdfs/subClassOf obo/GO_0005488) ;;GO:binding
+         (?/interaction rdfs/label ["binding"]) ; transfer label to the subclass
          (?/record obo/IAO_0000219 ?/interaction) ; the ICE record denotes the interaction
                    
          ;; create subclasses of the bioentities (genes in this case)
@@ -33,8 +33,7 @@
 
   :body
   ;; get binary interaction records
-  ((obo/GO_0005488 rdfs/label ?/interaction_label)
-   (?/genefield kiao/hasTemplate
+  ((?/genefield kiao/hasTemplate
                 iaounknown/InteractionWithScoreFileRecord_interactingGene1DataField1)
    (?/genefield obo/IAO_0000219 ?/geneIce)
    (?/geneIce obo/IAO_0000219 ?/gene1)
