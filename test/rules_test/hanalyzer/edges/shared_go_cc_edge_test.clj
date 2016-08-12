@@ -79,6 +79,25 @@
                          (ex/w rdfs/label ["w"])
                          (ex/z rdfs/label ["z"])
                          (ex/v rdfs/label ["v"])
+
+                          ;; the rule that creates shared go edges uses
+                         ;; the resnik concept probability as a
+                         ;; threshold to keep from creating edges
+                         ;; based on very general concepts, e.g. the
+                         ;; root biological_process concept. Here we
+                         ;; set the resnik concept probability for
+                         ;; each concept to be 0.001
+                         (obo/GO_0008150 iaohan/resnik-concept-prob-aael 0.001)
+                         (ex/b iaohan/resnik-concept-prob-aael 0.001)
+                         (ex/c iaohan/resnik-concept-prob-aael 0.001)
+                         (ex/d iaohan/resnik-concept-prob-aael 0.001)
+                         (ex/e iaohan/resnik-concept-prob-aael 0.001)
+                         (ex/f iaohan/resnik-concept-prob-aael 0.001)
+                         (ex/v iaohan/resnik-concept-prob-aael 0.001)
+                         (ex/w iaohan/resnik-concept-prob-aael 0.001)
+                         (ex/x iaohan/resnik-concept-prob-aael 0.001)
+                         (ex/y iaohan/resnik-concept-prob-aael 0.001)
+                         (ex/z iaohan/resnik-concept-prob-aael 0.001)
                          
                          (ex/p1_sc rdfs/subClassOf ex/p1)
                          (ex/p2_sc rdfs/subClassOf ex/p2)
