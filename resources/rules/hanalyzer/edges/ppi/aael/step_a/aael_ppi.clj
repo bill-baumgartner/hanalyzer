@@ -23,6 +23,7 @@
          (?/participant_r1 owl/onProperty obo/RO_0000057)
          (?/participant_r1 owl/someValuesFrom ?/gene1_sc)
          (?/interaction rdfs/subClassOf ?/participant_r1)
+         (?/interaction rdfs/subClassOf ?/participant_r2)
          (!= ?/participant_r1 ?/participant_r2)
          (?/participant_r2 owl/onProperty obo/RO_0000057)
          (?/participant_r2 owl/someValuesFrom ?/gene2_sc)
@@ -39,8 +40,8 @@
          (?/sourceField kiao/hasTemplate iaounknown/InteractionWithScoreFileRecord_sourceDataField1)
          (?/sourceField obo/IAO_0000219 ?/source)
          (?/record obo/BFO_0000051 ?/scoreField)
-         (?/scoreField kiao/hasTemplate iao/unknown/InteractionWithScoreFileRecord_scoreDataField1)
-         (?/scoreField obo/IAO_00000219 ?/score)
+         (?/scoreField kiao/hasTemplate iaounknown/InteractionWithScoreFileRecord_scoreDataField1)
+         (?/scoreField obo/IAO_0000219 ?/score)
          
          (?/node1 iaohan/denotes ?/gene1)         
          (?/node2 iaohan/denotes ?/gene2)
