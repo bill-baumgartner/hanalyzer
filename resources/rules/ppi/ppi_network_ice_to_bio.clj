@@ -1,5 +1,6 @@
 `{:name "protein-protein-interactions"
-  :description "This rule creates PPIs in BioWorld for protein-protein interactions asserted from various sources."
+  :description "This rule creates PPIs in BioWorld for protein-protein
+  interactions asserted from various sources."
   
   :head ((?/interaction rdfs/subClassOf obo/GO_0005488) ;interaction
          (?/interaction rdfs/label ?/interaction_label) ; transfer label to the subclass
@@ -33,18 +34,17 @@
   :body
   ;; get binary interaction records
   ((obo/GO_0005488 rdfs/label ?/interaction_label)
-   (?/genefield kiao/hasTemplate iaounknown/InteractionWithScoreFileRecord_interactingGene1DataField1)
+   (?/genefield kiao/hasTemplate
+                iaounknown/InteractionWithScoreFileRecord_interactingGene1DataField1)
    (?/genefield obo/IAO_0000219 ?/geneIce)
    (?/geneIce obo/IAO_0000219 ?/gene1)
    (?/record obo/BFO_0000051 ?/genefield)
    (?/record obo/BFO_0000051 ?/otherGeneField)
-   (?/otherGeneField kiao/hasTemplate iaounknown/InteractionWithScoreFileRecord_interactingGene2DataField1)
+   (?/otherGeneField kiao/hasTemplate
+                     iaounknown/InteractionWithScoreFileRecord_interactingGene2DataField1)
    (?/otherGeneField obo/IAO_0000219 ?/otherGeneIce)
    (?/otherGeneIce obo/IAO_0000219 ?/gene2))
 
-  ;; we take advantage of the fact that IRefWeb has
-  ;; created a unique id for the interaction. This will allow us to reproducibly create
-  ;; a hash for the interaction that can be matched across records.
   :reify ([?/interaction {:ln (:sha-1 ?/gene1 ?/gene2 obo/GO_0005488)
                           :ns "kbio" :prefix "I_"}]
           [?/r1 {:ln (:restriction)
