@@ -4,7 +4,7 @@
   
   :head ((?/interaction rdfs/subClassOf obo/GO_0005488) ;interaction
          (?/interaction rdfs/label ?/interaction_label) ; transfer label to the subclass
-         (?/record obo/IAO_0000219 ?interaction) ; the ICE record denotes the interaction
+         (?/record obo/IAO_0000219 ?/interaction) ; the ICE record denotes the interaction
                    
          ;; create subclasses of the bioentities (genes in this case)
          (?/gene1_sc rdfs/subClassOf ?/gene1)
