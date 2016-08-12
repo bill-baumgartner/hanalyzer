@@ -1,4 +1,4 @@
-(ns rules-test.hanalyzer.info-content.resnik.resnik-concept-probability-test
+(ns rules-test.hanalyzer.info-content.resnik.resnik-go-bp-test
   (use clojure.test
         edu.ucdenver.ccp.kr.sesame.kb
         edu.ucdenver.ccp.kr.sesame.sparql
@@ -224,96 +224,6 @@
     (is (= (float 3/8) (get-concept-prob `ex/z source-kb)))))
 
 
-
-
-
-
-(defn get-pms [c1 c2 kb]
-  "given two concepts, return the probability of min subsumer"
-  ('?/prob (first (apply list (query kb
-                                     `((?/pms obo/RO_0000057 ~c1)
-                                       (?/pms rdf/type iaohan/GOBP_Pair_aael)
-                                       (?/pms obo/RO_0000057 ~c2)
-                                       (?/pms iaohan/prob-min-subsumer ?/prob)))))))
-
-
-(defn get-jiang-d [c1 c2 kb]
-  "given two concepts, return the jiang distance"
-  ('?/dist (first (apply list (query kb
-                                     `((?/pms obo/RO_0000057 ~c1)
-                                       (?/pms rdf/type iaohan/GOBP_Pair_aael)
-                                       (?/pms obo/RO_0000057 ~c2)
-                                       (?/pms iaohan/jiang_distance ?/dist)))))))
-
-(deftest test-jiang
-  (let [annot-count-rule (first
-                          (filter #(= (:name %) "annotation-counts-go-bp-aael")
-                                        (kabob-load-rules-from-classpath
-                                         "rules/hanalyzer/info_content/resnik/aael")))
-        concept-prob-rule (first
-                           (filter #(= (:name %) "resnik-concept-probability-go-bp-aael")
-                                         (kabob-load-rules-from-classpath
-                                          "rules/hanalyzer/info_content/resnik/aael")))
-        compute-pms-rule (first
-                           (filter #(= (:name %) "jiang-compute-pms-go-bp-aael")
-                                         (kabob-load-rules-from-classpath
-                                          "rules/hanalyzer/semantic_similarity/jiang/aael")))
-        
-        jiang-dist-rule  (first
-                           (filter #(= (:name %) "jiang-distance-go-bp-aael")
-                                         (kabob-load-rules-from-classpath
-                                          "rules/hanalyzer/semantic_similarity/jiang/aael")))
-
-        source-kb (test-kb sample-kb-triples)] ;; source kb contains sample triples
-         
-
-    
-    
-    
-    ;; annotation counts are a prerequisite for the concept-probability calculation
-    ;; rule being tested here, so we prepopulate the kb with annotation counts.
-    ;; Note: the annotation count rule is tested in isolation above.
-    (run-forward-rule source-kb source-kb annot-count-rule)
-    (run-forward-rule source-kb source-kb concept-prob-rule)
-
-    (is (= (float 8/8) (get-concept-prob `obo/GO_0008150 source-kb)))
-    
-    (run-forward-rule source-kb source-kb compute-pms-rule)
-
-    ;; below is a sampling of the expected output
-    (is (= (float 6/8) (get-pms 'ex/y 'ex/z source-kb)))
-    ;; adding the constraint that ?/c2 rdfs/subClassOf ?/c1 makes
-    ;; the next two tests fail so they have been commented out
-    ;; The tradeoff is that hopefully the query will run to completion
-    ;; without running out of memory.
-    ;;(is (= (float 3/8) (get-pms 'ex/c 'ex/f source-kb)))
-    ;;(is (= (float 6/8) (get-pms 'ex/e 'ex/w source-kb)))
-    (is (= (float 8/8) (get-pms 'ex/c 'ex/b source-kb)))
-
-    (run-forward-rule source-kb source-kb jiang-dist-rule)
-
-     ;; below is a sampling of the expected output
-    (is (= (- (* -2 (Math/log 6/8)) (+ (Math/log 5/8) (Math/log 3/8))))
-           (get-jiang-d 'ex/y 'ex/z source-kb))
-    (is (= (- (* -2 (Math/log 3/8)) (+ (Math/log 2/8) (Math/log 1/8))))
-           (get-jiang-d 'ex/c 'ex/f source-kb))
-    (is (= (- (* -2 (Math/log 6/8)) (+ (Math/log 1/8) (Math/log 2/8))))
-           (get-jiang-d 'ex/e 'ex/w source-kb))
-    (is (= (- (* -2 (Math/log 8/8)) (+ (Math/log 2/8) (Math/log 3/8))))
-           (get-jiang-d 'ex/c 'ex/b source-kb))
-
-    ;; The code fragment below is useful for debugging as it writes
-    ;; triples to a local file.
-    ;; (let [log-kb (output-kb "/tmp/triples.nt")]
-    ;;   ;; add sample triples to the log kb
-    ;;   (dorun (map (partial add! log-kb) sample-kb-triples))
-      
-    ;;   (run-forward-rule source-kb log-kb annot-count-rule)
-    ;;   (run-forward-rule source-kb log-kb concept-prob-rule)
-    ;;   (run-forward-rule source-kb log-kb compute-pms-rule)
-    ;;   (run-forward-rule source-kb log-kb jiang-dist-rule)
-    ;;   (close log-kb))
-    ))
 
   
 

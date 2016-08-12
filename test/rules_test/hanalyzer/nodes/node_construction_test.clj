@@ -1,5 +1,5 @@
 
-(ns rules-test.hanalyzer.node-construction-test
+(ns rules-test.hanalyzer.nodes.node-construction-test
   (use clojure.test
         edu.ucdenver.ccp.kr.sesame.kb
         edu.ucdenver.ccp.kr.sesame.sparql
