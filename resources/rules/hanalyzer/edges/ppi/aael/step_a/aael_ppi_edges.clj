@@ -11,8 +11,8 @@
          (?/edge iaohan/linksNode ?/node2)
          (?/edge iaohan/denotes ?/interaction)
          (?/edge iaohan/interaction_source ?/source)
-         (?/edge iaohan/interaction_score ?/score)
-         (?/edge rdfs/label ?/edgeLabel))
+         (?/edge iaohan/interaction_score ?/score))
+
 
   :reify ([?/edge {:ln (:sha-1 iaohan/PpiEdge ?/node1 ?/node2 ?/go)
                    :ns "iaohan" :prefix "HANEDGE_PPI_"}])
