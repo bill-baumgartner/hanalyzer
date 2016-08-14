@@ -14,7 +14,7 @@
          (?/edge iaohan/interaction_score ?/score))
 
 
-  :reify ([?/edge {:ln (:sha-1 iaohan/PpiEdge ?/node1 ?/node2 ?/interaction)
+  :reify ([?/edge {:ln (:sha-1 iaohan/PpiEdge ?/node1 ?/node2 ?/source)
                    :ns "iaohan" :prefix "HANEDGE_PPI_"}])
 
   :body ((?/interaction rdfs/subClassOf obo/GO_0005488) ;; GO:binding
