@@ -16,8 +16,7 @@
          ;; NCBITaxon 7159
          (?/taxon_r owl/onProperty obo/RO_0002162)
          (?/taxon_r rdf/type owl/Restriction)
-         (?/taxon_r owl/someValuesFrom ?/taxon)
-         (?/taxon [rdfs/subClassOf *] obo/NCBITaxon_7159)
+         (?/taxon_r owl/someValuesFrom obo/NCBITaxon_7159)
          (?/pathway rdfs/subClassOf ?/taxon_r) ;; the pathway must belong to the specified taxon
          (?/pathway [rdfs/subClassOf *] obo/INO_0000003) ;; INO_0000003 = pathway
          (?/pathway rdfs/label ?/edgeLabel)
@@ -40,6 +39,6 @@
          (?/ggp_sc_2 rdfs/subClassOf ?/ggp_2)
          (?/node2 iaohan/denotes ?/ggp_2))
 
-  :options {:magic-prefixes [;;["franzOption_clauseReorderer" "franz:identity"]
+  :options {:magic-prefixes [["franzOption_clauseReorderer" "franz:identity"]
                              ["franzOption_chunkProcessingAllowed" "franz:yes"]]}
   }
