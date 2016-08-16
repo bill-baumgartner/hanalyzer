@@ -1,0 +1,75 @@
+(ns rules-test.hanalyzer.source-reliability.normalize-reliability-test
+  (use clojure.test
+        edu.ucdenver.ccp.kr.sesame.kb
+        edu.ucdenver.ccp.kr.sesame.sparql
+        edu.ucdenver.ccp.kr.sesame.rdf
+        )
+  (:require  [edu.ucdenver.ccp.kabob.build.run-rules :refer [query-variables run-forward-rule-sparql-string]]
+             [edu.ucdenver.ccp.kr.forward-rule :refer [add-reify-fns]]
+             [edu.ucdenver.ccp.kr.sparql :refer [sparql-select-query query]]
+             [edu.ucdenver.ccp.kr.rdf :refer [register-namespaces synch-ns-mappings add!]]
+             [edu.ucdenver.ccp.kr.kb :refer [kb open close]]
+             [edu.ucdenver.ccp.kabob.namespace :refer [*namespaces*]]
+             [edu.ucdenver.ccp.kabob.rule :refer [kabob-load-rules-from-classpath]]
+             [edu.ucdenver.ccp.kabob.build.output-kb :refer [output-kb]]
+             [kabob]
+             [clojure.pprint :refer [pprint]]))
+
+
+(def sample-kb-triples '((ex/h1 iaohan/reliability_aael 0.003165)
+                         (ex/h2 iaohan/reliability_aael 0.0029346)
+                         (ex/h3 iaohan/reliability_aael 0.0)
+                         (ex/h4 iaohan/reliability_aael 1.000581)
+                         (ex/h5 iaohan/reliability_aael 0.007044)
+                         (ex/h6 iaohan/reliability_aael 0.0183835)
+                         (ex/h7 iaohan/reliability_aael 1.0002906)
+                         (ex/h8 iaohan/reliability_aael 0.0002034)))
+                                  
+(def new-triples '())
+
+(def result-triples '())
+
+(defn test-kb [triples]
+  "initializes an empty kb"
+  (let [kb (register-namespaces (synch-ns-mappings (open (kb :sesame-mem)))
+                                *namespaces*)]
+    (dorun (map (partial add! kb) triples))
+    kb))
+
+(defn get-consensus-overlap-count [subject output-kb]
+  "queries the kb for the iaohan/consensus_overlap_count_aael for the given subject"
+  ('?/count (first (apply list (query output-kb
+                                      `((~subject iaohan/consensus_overlap_count_aael ?/count)))))))
+
+(deftest test-reliability-normalization
+  (let [rule (first (filter #(= (:name %) "normalize-reliability") (kabob-load-rules-from-classpath "rules/hanalyzer/reliability/aael")))
+        source-kb (test-kb sample-kb-triples)] ;; source kb contains sample triples
+    
+    (run-forward-rule-sparql-string source-kb source-kb rule)
+
+    ;; there should be 8 instances of iaohan/normalized_reliability
+    (is (= 8 (count (query source-kb '((?/edge_type iaohan/normalized_reliability ?/score)))))) 
+
+    ;;(is (= 4 (get-consensus-overlap-count 'iaohan/HAN_0000007 source-kb))) ;; HAN:shared_go_bp_asserted_edge
+                                      
+    ;; The code fragment below is useful for debugging as it writes
+    ;; triples to a local file.
+   ;; (let [log-kb (output-kb "/tmp/triples.nt")]
+      ;; add sample triples to the log kb
+   ;;   (dorun (map (partial add! log-kb) sample-kb-triples))
+      
+   ;;   (run-forward-rule source-kb log-kb rule)
+   ;;   (close log-kb))
+    ))
+    
+
+
+
+    
+    
+
+  
+
+
+
+

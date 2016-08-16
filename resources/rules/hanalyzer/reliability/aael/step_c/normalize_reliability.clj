@@ -7,15 +7,12 @@
 
   :dependency ""
   
-  :head ((?/edge_type iaohan/normalized_reliability {:num_type :float
-                                                     :as ?/norm_reliability
-                                                     :eqn [?/reliability_score "/"
-                                                          "(" ?/max_r "+ 1 )"]})) 
+  :head ((?/edge_type iaohan/normalized_reliability ?/norm_reliability)) 
 
   :reify ()
 
   :sparql-string "PREFIX iaohan: <http://kabob.ucdenver.edu/iao/hanalyzer/> 
-                  select ?edge_type ?reliability_score ?max_r
+                  select ?edge_type (xsd:float(?reliability_score)/(xsd:float(?max_r) + 1) as ?norm_reliability)
                   WHERE {
   	             ?edge_type iaohan:reliability_aael ?reliability_score
 	             {
