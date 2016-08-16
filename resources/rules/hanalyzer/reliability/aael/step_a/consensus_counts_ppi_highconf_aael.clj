@@ -30,7 +30,7 @@
                              ["franzOption_chunkProcessingAllowed" "franz:yes"]]}
   }
 
-`{:name "asserted-node-interaction-count-ppi-highconf-aael"
+`{:name "asserted-node-interaction-count-ppi-highconf-guo-aael"
   :description "This rule counts the number of unique node pairings
   that are asserted to 'interact' because they participate in a
   protein-protein interaction as defined by the Guo dataset."
@@ -58,7 +58,7 @@
   }
 
 
-`{:name "consensus-overlap-count-ppi-highconf-guo-aael"
+`{:name "consensus-overlap-count-ppi-highconf-string-aael"
   :description "This rule counts the number of unique node pairings
   that are asserted to 'interact' because they participate in a
   protein-protein interaction as defined by String and that also
@@ -90,7 +90,7 @@
                              ["franzOption_chunkProcessingAllowed" "franz:yes"]]}
   }
 
-`{:name "asserted-node-interaction-count-ppi-highconf-aael"
+`{:name "asserted-node-interaction-count-ppi-highconf-string-aael"
   :description "This rule counts the number of unique node pairings
   that are asserted to 'interact' because they participate in a
   protein-protein interaction as defined by String."
