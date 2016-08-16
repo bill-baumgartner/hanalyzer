@@ -3,10 +3,11 @@
   :description "This rule produces reified edges between two hanalyzer nodes
   that have were asserted to interact by a PPI resource."
 
-  :head (;; creates a reified edge of type iaohan/PpiEdge that links
+  :head (;; creates a reified edge of type
+         ;; iaohan/HAN_0000009 (HAN:ppi_asserted_edge) that links
          ;; the two hanalyzer nodes that denote GGPs that participate
          ;; in a protein-protein interaction
-         (?/edge rdf/type iaohan/PpiEdge) 
+         (?/edge rdf/type iaohan/HAN_0000009) ;; HAN:ppi_asserted_edge 
          (?/edge iaohan/linksNode ?/node1)
          (?/edge iaohan/linksNode ?/node2)
          (?/edge iaohan/denotes ?/interaction)
@@ -14,7 +15,7 @@
          (?/edge iaohan/interaction_score ?/score))
 
 
-  :reify ([?/edge {:ln (:sha-1 iaohan/PpiEdge ?/node1 ?/node2 ?/source)
+  :reify ([?/edge {:ln (:sha-1 iaohan/HAN_0000009 ?/node1 ?/node2 ?/source)
                    :ns "iaohan" :prefix "HANEDGE_PPI_"}])
 
   :body ((?/interaction rdfs/subClassOf obo/GO_0005488) ;; GO:binding

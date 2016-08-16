@@ -223,7 +223,7 @@
     (run-forward-rule source-kb source-kb rule)
 
     ;; there should be 1 instances of iaohan/annotation-count-aael
-    (is (= 1 (count (query source-kb '((?/edge rdf/type iaohan/SharedGoMfEdge)
+    (is (= 1 (count (query source-kb '((?/edge rdf/type iaohan/HAN_0000005) ;; HAN:shared_go_mf_asserted_edge
                                        (?/edge iaohan/linksNode ex/han_node_2)
                                        (?/edge iaohan/linksNode ex/han_node_3)
                                        (?/edge iaohan/denotes ex/record7)
@@ -231,12 +231,12 @@
     
     ;; The code fragment below is useful for debugging as it writes
     ;; triples to a local file.
-    (let [log-kb (output-kb "/tmp/triples.nt")]
+    ;;(let [log-kb (output-kb "/tmp/triples.nt")]
       ;; add sample triples to the log kb
-      (dorun (map (partial add! log-kb) sample-kb-triples))
+    ;;  (dorun (map (partial add! log-kb) sample-kb-triples))
       
     ;; ;;(run-forward-rule source-kb log-kb rule)
-     (close log-kb))
+    ;; (close log-kb))
     ))
 
 

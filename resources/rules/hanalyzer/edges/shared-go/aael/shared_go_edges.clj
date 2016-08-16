@@ -7,17 +7,18 @@
   prevents links being asserted by very general nodes, e.g. the root
   biological_process node."
 
-  :head (;; creates a reified edge of type iaohan/SharedGoBpEdge
+  :head (;; creates a reified edge of type
+         ;; iaohan/HAN_0000007 (HAN:shared_go_bp_asserted_edge)
          ;; that links the two hanalyzer nodes that denote GGPs that
          ;; participate in the same biological process
-         (?/edge rdf/type iaohan/SharedGoBpEdge) 
+         (?/edge rdf/type iaohan/HAN_0000007) ;; HAN:shared_go_bp_asserted_edge
          (?/edge iaohan/linksNode ?/node1)
          (?/edge iaohan/linksNode ?/node2)
          (?/edge iaohan/denotes ?/go_sc)
          (?/edge iaohan/denotes ?/go_sc2)
          (?/edge rdfs/label ?/edgeLabel))
 
-  :reify ([?/edge {:ln (:sha-1 iaohan/SharedGoBpEdge ?/node1 ?/node2 ?/go)
+  :reify ([?/edge {:ln (:sha-1 iaohan/HAN_0000007 ?/node1 ?/node2 ?/go)
                    :ns "iaohan" :prefix "HANEDGE_GOBP_"}])
 
   :body ((?/go iaohan/resnik-concept-prob-aael ?/prob)
@@ -66,17 +67,18 @@
   prevents links being asserted by very general nodes, e.g. the root
   cellular_component node."
 
-  :head (;; creates a reified edge of type iaohan/SharedGoCcEdge
+  :head (;; creates a reified edge of type
+         ;; iaohan/HAN_0000006 (HAN:shared_go_cc_asserted_edge)
          ;; that links the two hanalyzer nodes that denote GGPs that
          ;; are known to be colocalized in the same cellular component
-         (?/edge rdf/type iaohan/SharedGoCcEdge) 
+         (?/edge rdf/type iaohan/HAN_0000006) ;; HAN:shared_go_cc_asserted_edge
          (?/edge iaohan/linksNode ?/node1)
          (?/edge iaohan/linksNode ?/node2)
          (?/edge iaohan/denotes ?/go_sc)
          (?/edge iaohan/denotes ?/go_sc2)
          (?/edge rdfs/label ?/edgeLabel))
 
-  :reify ([?/edge {:ln (:sha-1 iaohan/SharedGoCcEdge ?/node1 ?/node2 ?/go)
+  :reify ([?/edge {:ln (:sha-1 iaohan/HAN_0000006 ?/node1 ?/node2 ?/go)
                    :ns "iaohan" :prefix "HANEDGE_GOCC_"}])
 
   :body ((?/go iaohan/resnik-concept-prob-aael ?/prob)
@@ -128,10 +130,11 @@
   currently represented on the BIO side of KaBOB, this rule reaches
   back into the ICE side to grab the requisite information."
 
-  :head (;; creates a reified edge of type iaohan/SharedGoMfEdge
+  :head (;; creates a reified edge of type
+         ;; iaohan/HAN_0000005 (HAN:shared_go_mf_asserted_edge)
          ;; that links the two hanalyzer nodes that denote GGPs that
          ;; participate in the same molecular function
-         (?/edge rdf/type iaohan/SharedGoMfEdge) 
+         (?/edge rdf/type iaohan/HAN_0000005) ;; HAN:shared_go_mf_asserted_edge 
          (?/edge iaohan/linksNode ?/node1)
          (?/edge iaohan/linksNode ?/node2)
          (?/edge iaohan/denotes ?/record) ;; denotes --> ICE is
@@ -144,7 +147,7 @@
          (?/edge iaohan/denotes ?/record2)
          (?/edge rdfs/label ?/edgeLabel))
 
-  :reify ([?/edge {:ln (:sha-1 iaohan/SharedGoMfEdge ?/node1 ?/node2 ?/go)
+  :reify ([?/edge {:ln (:sha-1 iaohan/HAN_0000005 ?/node1 ?/node2 ?/go)
                    :ns "iaohan" :prefix "HANEDGE_GOMF_"}])
 
   :body ((?/go iaohan/resnik-concept-prob-aael ?/prob)

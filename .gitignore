@@ -10,3 +10,4 @@ pom.xml.asc
 .hg/
 *.*~
 test-triples/
+catalog-v*.xml

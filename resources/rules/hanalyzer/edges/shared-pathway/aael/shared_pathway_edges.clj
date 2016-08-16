@@ -1,15 +1,15 @@
 `{:name "aael-shared-pathway-edges"
   :description "This rule produces reified edges between two hanalyzer nodes
   that have GGPs that appear in the same KEGG pathway."
-  :head (;; creates a reified edge of type iaohan/SharedPathwayEdge that links
+  :head (;; creates a reified edge of type iaohan/HAN_0000008 (HAN:shared_pathway_asserted_edge) that links
          ;; the two hanalyzer nodes that denote GGPs that participate in a shared pathway
-         (?/edge rdf/type iaohan/SharedPathwayEdge) 
+         (?/edge rdf/type iaohan/HAN_0000008) ;; HAN:shared_pathway_asserted_edge 
          (?/edge iaohan/linksNode ?/node1)
          (?/edge iaohan/linksNode ?/node2)
          (?/edge iaohan/denotes ?/pathway)
          (?/edge rdfs/label ?/edgeLabel))
 
-  :reify ([?/edge {:ln (:sha-1 iaohan/SharedPathwayEdge ?/node1 ?/node2 ?/pathway)
+  :reify ([?/edge {:ln (:sha-1 iaohan/HAN_0000008 ?/node1 ?/node2 ?/pathway)
                    :ns "iaohan" :prefix "HANEDGE_PW_"}])
 
   :body (;; this rule is yellow fever mosquito-specific so we restrict to

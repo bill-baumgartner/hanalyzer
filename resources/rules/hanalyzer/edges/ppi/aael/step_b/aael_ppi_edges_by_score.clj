@@ -11,11 +11,12 @@
 
   :dependency "rules/hanalyzer/edges/ppi/aael/step_a/aael_ppi_edges"
   
-  :head ((?/edge rdf/type iaohan/HighConfidencePpiEdge))
-
+  :head ((?/edge rdf/type iaohan/HAN_0000010) ;; HAN:high_confidence_ppi_asserted_edge
+         (?/edge rdf/type iaohan/HAN_0000015)) ;; HAN:high_confidence_ppi_asserted_edge_guo
+        
   :reify ()
 
-  :body ((?/edge rdf/type iaohan/PpiEdge)
+  :body ((?/edge rdf/type iaohan/HAN_0000009) ;; HAN:ppi_asserted_edge
          (?/edge iaohan/interaction_source ["Guo" "en"])
          (?/edge iaohan/interaction_score ?/score)
          (> ?/score 0.70)) 
@@ -37,11 +38,12 @@
 
   :dependency "rules/hanalyzer/edges/ppi/aael/step_a/aael_ppi_edges"
   
-  :head ((?/edge rdf/type iaohan/LowConfidencePpiEdge))
+  :head ((?/edge rdf/type iaohan/HAN_0000011) ;; HAN:low_confidence_ppi_asserted_edge
+         (?/edge rdf/type iaohan/HAN_0000013)) ;; HAN:low_confidence_ppi_asserted_edge_guo
 
   :reify ()
 
-  :body ((?/edge rdf/type iaohan/PpiEdge)
+  :body ((?/edge rdf/type iaohan/HAN_0000009) ;; HAN:ppi_asserted_edge
          (?/edge iaohan/interaction_source ["Guo" "en"])
          (?/edge iaohan/interaction_score ?/score)
          (<= ?/score 0.70)) 
@@ -63,11 +65,12 @@
 
   :dependency "rules/hanalyzer/edges/ppi/aael/step_a/aael_ppi_edges"
   
-  :head ((?/edge rdf/type iaohan/HighConfidencePpiEdge))
+  :head ((?/edge rdf/type iaohan/HAN_0000010) ;; HAN:high_confidence_ppi_asserted_edge
+         (?/edge rdf/type iaohan/HAN_0000014)) ;; HAN:high_confidence_ppi_asserted_edge_string
 
   :reify ()
 
-  :body ((?/edge rdf/type iaohan/PpiEdge)
+  :body ((?/edge rdf/type iaohan/HAN_0000009) ;; HAN:ppi_asserted_edge
          (?/edge iaohan/interaction_source ["String" "en"])
          (?/edge iaohan/interaction_score ?/score)
          (> ?/score 400)) 
@@ -89,11 +92,13 @@
 
   :dependency "rules/hanalyzer/edges/ppi/aael/step_a/aael_ppi_edges"
   
-  :head ((?/edge rdf/type iaohan/LowConfidencePpiEdge))
+  :head ((?/edge rdf/type iaohan/HAN_0000011) ;; HAN:low_confidence_ppi_asserted_edge
+         (?/edge rdf/type iaohan/HAN_0000012)) ;; HAN:low_confidence_ppi_asserted_edge_string
+
 
   :reify ()
 
-  :body ((?/edge rdf/type iaohan/PpiEdge)
+  :body ((?/edge rdf/type iaohan/HAN_0000009) ;; HAN:ppi_asserted_edge
          (?/edge iaohan/interaction_source ["String" "en"])
          (?/edge iaohan/interaction_score ?/score)
          (<= ?/score 400)) 

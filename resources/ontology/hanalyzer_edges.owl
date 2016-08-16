@@ -1,0 +1,187 @@
+<?xml version="1.0"?>
+
+
+<!DOCTYPE rdf:RDF [
+    <!ENTITY owl "http://www.w3.org/2002/07/owl#" >
+    <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
+    <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
+    <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
+]>
+
+
+<rdf:RDF xmlns="http://kabob.ucdenver.edu/iao/hanalyzer/"
+     xml:base="http://kabob.ucdenver.edu/iao/hanalyzer/"
+     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+     xmlns:owl="http://www.w3.org/2002/07/owl#"
+     xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+     xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <owl:Ontology rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/"/>
+    
+
+
+    <!-- 
+    ///////////////////////////////////////////////////////////////////////////////////////
+    //
+    // Classes
+    //
+    ///////////////////////////////////////////////////////////////////////////////////////
+     -->
+
+    
+
+
+    <!-- http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000000 -->
+
+    <owl:Class rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000000">
+        <rdfs:label>edge</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000001 -->
+
+    <owl:Class rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000001">
+        <rdfs:label>master edge</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000000"/>
+    </owl:Class>
+    
+
+
+    <!-- http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000002 -->
+
+    <owl:Class rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000002">
+        <rdfs:label>source-asserted edge</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000000"/>
+    </owl:Class>
+    
+
+
+    <!-- http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000003 -->
+
+    <owl:Class rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000003">
+        <rdfs:label>explicitly asserted edge</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000002"/>
+    </owl:Class>
+    
+
+
+    <!-- http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000004 -->
+
+    <owl:Class rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000004">
+        <rdfs:label>implicitly asserted edge</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000002"/>
+    </owl:Class>
+    
+
+
+    <!-- http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000005 -->
+
+    <owl:Class rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000005">
+        <rdfs:label>shared GO molecular function asserted edge</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000004"/>
+    </owl:Class>
+    
+
+
+    <!-- http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000006 -->
+
+    <owl:Class rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000006">
+        <rdfs:label>shared localization within a GO cellular component asserted edge</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000004"/>
+    </owl:Class>
+    
+
+
+    <!-- http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000007 -->
+
+    <owl:Class rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000007">
+        <rdfs:label>shared participation in a GO biological process asserted edge</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000004"/>
+    </owl:Class>
+    
+
+
+    <!-- http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000008 -->
+
+    <owl:Class rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000008">
+        <rdfs:label>shared pathway membership asserted edge</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000004"/>
+    </owl:Class>
+    
+
+
+    <!-- http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000009 -->
+
+    <owl:Class rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000009">
+        <rdfs:label>protein-protein interaction asserted edge</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000003"/>
+    </owl:Class>
+    
+
+
+    <!-- http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000010 -->
+
+    <owl:Class rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000010">
+        <rdfs:label>high confidence protein-protein interaction asserted edge</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000009"/>
+    </owl:Class>
+    
+
+
+    <!-- http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000011 -->
+
+    <owl:Class rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000011">
+        <rdfs:label>low confidence protein-protein interaction asserted edge</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000009"/>
+    </owl:Class>
+    
+
+
+    <!-- http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000012 -->
+
+    <owl:Class rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000012">
+        <rdfs:label>low confidence protein-protein interaction asserted edge from String dataset</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000011"/>
+    </owl:Class>
+    
+
+
+    <!-- http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000013 -->
+
+    <owl:Class rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000013">
+        <rdfs:label>low confidence protein-protein interaction asserted edge from Guo dataset</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000011"/>
+    </owl:Class>
+    
+
+
+    <!-- http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000014 -->
+
+    <owl:Class rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000014">
+        <rdfs:label>high confidence protein-protein interaction asserted edge from String dataset</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000010"/>
+    </owl:Class>
+    
+
+
+    <!-- http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000015 -->
+
+    <owl:Class rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000015">
+        <rdfs:label>high confidence protein-protein interaction asserted edge from Guo dataset</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000010"/>
+    </owl:Class>
+    
+
+
+    <!-- http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000016 -->
+
+    <owl:Class rdf:about="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000016">
+        <rdfs:label>consensus set edge</rdfs:label>
+        <rdfs:subClassOf rdf:resource="http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000000"/>
+    </owl:Class>
+</rdf:RDF>
+
+
+
+<!-- Generated by the OWL API (version 3.4.2) http://owlapi.sourceforge.net -->
+
