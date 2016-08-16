@@ -20,7 +20,7 @@
    		      ?edge iaohan:linksNode ?node2 .
                       ?consensus_edge iaohan:linksNode ?node1 .
                       ?consensus_edge iaohan:linksNode ?node2 .
-                      ?consensus_edge rdf:type iaohan::HAN_0000016 . # HAN:consensus_set_edge
+                      ?consensus_edge rdf:type iaohan:HAN_0000016 . # HAN:consensus_set_edge
    		      FILTER (?node1 != ?node2 && STR(IRI(?node1)) < STR(IRI(?node2)))
                      }
                    }"
