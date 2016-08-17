@@ -48,7 +48,7 @@
     (run-forward-rule-sparql-string source-kb source-kb rule)
 
     ;; there should be 8 instances of iaohan/normalized_reliability
-    (is (= 8 (count (query source-kb '((?/edge_type iaohan/normalized_reliability ?/score)))))) 
+    (is (= 8 (count (query source-kb '((?/edge_type iaohan/normalized_reliability_aael ?/score)))))) 
 
     ;;(is (= 4 (get-consensus-overlap-count 'iaohan/HAN_0000007 source-kb))) ;; HAN:shared_go_bp_asserted_edge
                                       

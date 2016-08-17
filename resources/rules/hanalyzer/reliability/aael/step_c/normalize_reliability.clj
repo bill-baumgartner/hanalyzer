@@ -7,7 +7,7 @@
 
   :dependency ""
   
-  :head ((?/edge_type iaohan/normalized_reliability ?/norm_reliability)) 
+  :head ((?/edge_type iaohan/normalized_reliability_aael ?/norm_reliability)) 
 
   :reify ()
 
