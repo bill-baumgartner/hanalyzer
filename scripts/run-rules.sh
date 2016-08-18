@@ -25,7 +25,7 @@ echo Running rules
 mkdir -p $OUTPUTDIR
 $MAVEN \
     --debug \
-    --file scripts/pom.xml \
+    --file scripts/script-pom.xml \
     -Dclojure.vmargs="-d64 -Xmx2G -XX:MaxPermSize=256m" \
     -Dclojure.mainClass="edu.ucdenver.ccp.kabob.build.run_rules" \
     -Dclojure.args="$KB_URL $KB $KB_USER $KB_PASS $OUTPUTDIR $RULES_RES_DIR" \

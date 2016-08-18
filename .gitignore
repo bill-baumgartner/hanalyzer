@@ -11,3 +11,4 @@ pom.xml.asc
 *.*~
 test-triples/
 catalog-v*.xml
+pom.xml
