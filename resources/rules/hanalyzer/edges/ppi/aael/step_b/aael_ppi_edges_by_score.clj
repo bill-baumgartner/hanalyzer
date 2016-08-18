@@ -19,7 +19,7 @@
   :body ((?/edge rdf/type iaohan/HAN_0000009) ;; HAN:ppi_asserted_edge
          (?/edge iaohan/interaction_source ["Guo" "en"])
          (?/edge iaohan/interaction_score ?/score)
-         (> ?/score 0.70)) 
+         (> ?/score 0.60)) 
 
   :options {:magic-prefixes [["franzOption_clauseReorderer" "franz:identity"]
                              ["franzOption_chunkProcessingAllowed" "franz:yes"]]}
@@ -46,7 +46,7 @@
   :body ((?/edge rdf/type iaohan/HAN_0000009) ;; HAN:ppi_asserted_edge
          (?/edge iaohan/interaction_source ["Guo" "en"])
          (?/edge iaohan/interaction_score ?/score)
-         (<= ?/score 0.70)) 
+         (<= ?/score 0.60)) 
 
   :options {:magic-prefixes [["franzOption_clauseReorderer" "franz:identity"]
                              ["franzOption_chunkProcessingAllowed" "franz:yes"]]}
@@ -73,7 +73,7 @@
   :body ((?/edge rdf/type iaohan/HAN_0000009) ;; HAN:ppi_asserted_edge
          (?/edge iaohan/interaction_source ["String" "en"])
          (?/edge iaohan/interaction_score ?/score)
-         (> ?/score 400)) 
+         (> ?/score 600)) 
 
   :options {:magic-prefixes [["franzOption_clauseReorderer" "franz:identity"]
                              ["franzOption_chunkProcessingAllowed" "franz:yes"]]}
@@ -101,7 +101,7 @@
   :body ((?/edge rdf/type iaohan/HAN_0000009) ;; HAN:ppi_asserted_edge
          (?/edge iaohan/interaction_source ["String" "en"])
          (?/edge iaohan/interaction_score ?/score)
-         (<= ?/score 400)) 
+         (<= ?/score 600)) 
 
   :options {:magic-prefixes [["franzOption_clauseReorderer" "franz:identity"]
                              ["franzOption_chunkProcessingAllowed" "franz:yes"]]}
