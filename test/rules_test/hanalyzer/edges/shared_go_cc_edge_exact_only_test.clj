@@ -1,4 +1,4 @@
-(ns rules-test.hanalyzer.edges.shared-go-cc-edge-test
+(ns rules-test.hanalyzer.edges.shared-go-cc-edge-exact-only-test
   (use clojure.test
         edu.ucdenver.ccp.kr.sesame.kb
         edu.ucdenver.ccp.kr.sesame.sparql
@@ -232,7 +232,7 @@
 
 
 (deftest test-create-shared-go-edges
-  (let [rule (first (filter #(= (:name %) "aael-shared-go-cc-edges") (kabob-load-rules-from-classpath "rules/hanalyzer/edges/shared-go/aael")))
+  (let [rule (first (filter #(= (:name %) "aael-shared-go-cc-edges-exact-only") (kabob-load-rules-from-classpath "rules/hanalyzer/edges/shared-go/aael")))
         ;;output-kb (test-kb '()) ;; output kb is initialized to empty
         source-kb (test-kb sample-kb-triples)] ;; source kb contains sample triples
     

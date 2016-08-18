@@ -1,4 +1,4 @@
-(ns rules-test.hanalyzer.edges.shared-go-bp-edge-test
+(ns rules-test.hanalyzer.edges.shared-go-bp-edge-hierarchical-test
   (use clojure.test
         edu.ucdenver.ccp.kr.sesame.kb
         edu.ucdenver.ccp.kr.sesame.sparql
@@ -22,21 +22,24 @@
 ;;; --------------------------------------------------------
 
 ;;;            obo:GO_0008150
-;;;                 / \
-;;;                b   x
-;;;               / \ / \
+;;;                 / \              
+;;;                b   x           above, prob > 0.01
+;;;     - - - - - - - - - - - - - - - - - - - - - - - -
+;;;               / \ / \          below, prob < 0.01
 ;;;              c   e   y
 ;;;             /   /   / \
 ;;;            d   f   w   z
-;;;                     \ /
-;;;                      v
+;;;           /         \ /
+;;;          g           v
+;;;         /
+;;;        h
 ;;;
 ;;; All nodes will have obo-namespace=biological_process
 ;;;
 ;;; Annotation of these concepts to three proteins (p1, p2, & p3)
 ;;; will also be modeled.
 ;;;
-;;; c=p1
+;;; h=p1
 ;;; d=p2
 ;;; f=p3
 ;;; y=p1
@@ -49,6 +52,8 @@
                          (ex/c rdfs/subClassOf ex/b)
                          (ex/e rdfs/subClassOf ex/b)
                          (ex/d rdfs/subClassOf ex/c)
+                         (ex/g rdfs/subClassOf ex/d)
+                         (ex/h rdfs/subClassOf ex/g)
                          (ex/f rdfs/subClassOf ex/e)
                          (ex/e rdfs/subClassOf ex/x)
                          (ex/y rdfs/subClassOf ex/x)
@@ -62,6 +67,8 @@
                          (ex/d oboInOwl/hasOBONamespace ["biological_process"])
                          (ex/e oboInOwl/hasOBONamespace ["biological_process"])
                          (ex/f oboInOwl/hasOBONamespace ["biological_process"])
+                         (ex/g oboInOwl/hasOBONamespace ["biological_process"])
+                         (ex/h oboInOwl/hasOBONamespace ["biological_process"])
                          (ex/x oboInOwl/hasOBONamespace ["biological_process"])
                          (ex/y oboInOwl/hasOBONamespace ["biological_process"])
                          (ex/w oboInOwl/hasOBONamespace ["biological_process"])
@@ -73,6 +80,8 @@
                          (ex/d rdfs/label ["d"])
                          (ex/e rdfs/label ["e"])
                          (ex/f rdfs/label ["f"])
+                         (ex/g rdfs/label ["g"])
+                         (ex/h rdfs/label ["g"])
                          (ex/x rdfs/label ["x"])
                          (ex/y rdfs/label ["y"])
                          (ex/w rdfs/label ["w"])
@@ -86,15 +95,17 @@
                          ;; root biological_process concept. Here we
                          ;; set the resnik concept probability for
                          ;; each concept to be 0.001
-                         (obo/GO_0008150 iaohan/resnik-concept-prob-aael 0.001)
-                         (ex/b iaohan/resnik-concept-prob-aael 0.001)
+                         (obo/GO_0008150 iaohan/resnik-concept-prob-aael 1.0)
+                         (ex/b iaohan/resnik-concept-prob-aael 0.100)
                          (ex/c iaohan/resnik-concept-prob-aael 0.001)
                          (ex/d iaohan/resnik-concept-prob-aael 0.001)
                          (ex/e iaohan/resnik-concept-prob-aael 0.001)
                          (ex/f iaohan/resnik-concept-prob-aael 0.001)
+                         (ex/g iaohan/resnik-concept-prob-aael 0.001)
+                         (ex/h iaohan/resnik-concept-prob-aael 0.001)
                          (ex/v iaohan/resnik-concept-prob-aael 0.001)
                          (ex/w iaohan/resnik-concept-prob-aael 0.001)
-                         (ex/x iaohan/resnik-concept-prob-aael 0.001)
+                         (ex/x iaohan/resnik-concept-prob-aael 0.100)
                          (ex/y iaohan/resnik-concept-prob-aael 0.001)
                          (ex/z iaohan/resnik-concept-prob-aael 0.001)
                          
@@ -121,8 +132,8 @@
                          (ex/p2 rdfs/subClassOf ex/taxon_r)
                          (ex/p3 rdfs/subClassOf ex/taxon_r)
                                                   
-                         (ex/c_sc rdfs/subClassOf ex/c)
-                         (ex/c_sc rdfs/subClassOf ex/r1)
+                         (ex/h_sc rdfs/subClassOf ex/h)
+                         (ex/h_sc rdfs/subClassOf ex/r1)
                          (ex/r1 rdf/type owl/Restriction)
                          (ex/r1 owl/onProperty obo/RO_0000057)
                          (ex/r1 owl/someValuesFrom ex/p1_sc)
@@ -182,23 +193,64 @@
     kb))
 
 (deftest test-create-shared-go-edges
-  (let [rule (first (filter #(= (:name %) "aael-shared-go-bp-edges") (kabob-load-rules-from-classpath "rules/hanalyzer/edges/shared-go/aael")))
-        ;;output-kb (test-kb '()) ;; output kb is initialized to empty
-        source-kb (test-kb sample-kb-triples)] ;; source kb contains sample triples
-    
+  (let [rule (first (filter #(= (:name %) "aael-shared-go-bp-edges-hierarchical") (kabob-load-rules-from-classpath "rules/hanalyzer/edges/shared-go/aael")))
+        source-kb (test-kb sample-kb-triples)] ;; source kb contains sample triples    
     (run-forward-rule source-kb source-kb rule)
 
-    ;; there should be 1 instances of iaohan/annotation-count-aael
-    (is (= 1 (count (query source-kb '((?/edge rdf/type iaohan/HAN_0000007)))))) ;; HAN:shared_go_bp_asserted_edge
+    ;; there should be 7 instances of iaohan/HAN_0000007 created
+    ;; p1-p2 y (y,w)
+    ;; p1-p3 y (y,z)
+    ;; p1-p2 d (d,h)
+    ;; p1-p2 w (w,v)
+    ;; p1-p2 z (z,v)
+    ;; p2-p3 z (z,z)
+    ;; p1-p3 z (z,v)
+    (is (= 7 (count (query source-kb '((?/edge rdf/type iaohan/HAN_0000007)))))) ;; HAN:shared_go_bp_asserted_edge
+
+    (is (= 1 (count (query source-kb '((?/edge rdf/type iaohan/HAN_0000007) ;; HAN:shared_go_bp_asserted_edge
+                                       (?/edge iaohan/linksNode ex/han_node_1)
+                                       (?/edge iaohan/linksNode ex/han_node_2)
+                                       (?/edge iaohan/commonConcept ex/y)))))) 
+    
+    (is (= 1 (count (query source-kb '((?/edge rdf/type iaohan/HAN_0000007) ;; HAN:shared_go_bp_asserted_edge
+                                       (?/edge iaohan/linksNode ex/han_node_1)
+                                       (?/edge iaohan/linksNode ex/han_node_3)
+                                       (?/edge iaohan/commonConcept ex/y)))))) 
+    
+    (is (= 1 (count (query source-kb '((?/edge rdf/type iaohan/HAN_0000007) ;; HAN:shared_go_bp_asserted_edge
+                                       (?/edge iaohan/linksNode ex/han_node_1)
+                                       (?/edge iaohan/linksNode ex/han_node_2)
+                                       (?/edge iaohan/commonConcept ex/d)))))) 
+    
+    (is (= 1 (count (query source-kb '((?/edge rdf/type iaohan/HAN_0000007) ;; HAN:shared_go_bp_asserted_edge
+                                       (?/edge iaohan/linksNode ex/han_node_1)
+                                       (?/edge iaohan/linksNode ex/han_node_2)
+                                       (?/edge iaohan/commonConcept ex/w)))))) 
+    
+    (is (= 1 (count (query source-kb '((?/edge rdf/type iaohan/HAN_0000007) ;; HAN:shared_go_bp_asserted_edge
+                                       (?/edge iaohan/linksNode ex/han_node_1)
+                                       (?/edge iaohan/linksNode ex/han_node_2)
+                                       (?/edge iaohan/commonConcept ex/z)))))) 
+
+    (is (= 1 (count (query source-kb '((?/edge rdf/type iaohan/HAN_0000007) ;; HAN:shared_go_bp_asserted_edge
+                                       (?/edge iaohan/linksNode ex/han_node_2)
+                                       (?/edge iaohan/linksNode ex/han_node_3)
+                                       (?/edge iaohan/commonConcept ex/z)))))) 
+    
+    (is (= 1 (count (query source-kb '((?/edge rdf/type iaohan/HAN_0000007) ;; HAN:shared_go_bp_asserted_edge
+                                       (?/edge iaohan/linksNode ex/han_node_1)
+                                       (?/edge iaohan/linksNode ex/han_node_3)
+                                       (?/edge iaohan/commonConcept ex/z)))))) 
+    
     
     ;; The code fragment below is useful for debugging as it writes
     ;; triples to a local file.
-    ;;(let [log-kb (output-kb "/tmp/triples.nt")]
+    (let [log-kb (output-kb "/tmp/triples.nt")]
       ;; add sample triples to the log kb
-    ;;  (dorun (map (partial add! log-kb) sample-kb-triples))
+      (dorun (map (partial add! log-kb) sample-kb-triples))
       
     ;; ;;(run-forward-rule source-kb log-kb rule)
-    ;; (close log-kb))
+     (close log-kb))
     ))
 
 

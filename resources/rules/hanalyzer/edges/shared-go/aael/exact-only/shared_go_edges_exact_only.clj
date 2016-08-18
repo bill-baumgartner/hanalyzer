@@ -1,5 +1,5 @@
 
-`{:name "aael-shared-go-bp-edges"
+`{:name "aael-shared-go-bp-edges-exact-only"
   :description "This rule produces reified edges between two hanalyzer
   nodes that have GGPs that are annotated with the same GO BP
   concept. We limit shared edges between nodes to only those GO
@@ -59,7 +59,7 @@
 
 
 
-`{:name "aael-shared-go-cc-edges"
+`{:name "aael-shared-go-cc-edges-exact-only"
   :description "This rule produces reified edges between two hanalyzer
   nodes that have GGPs that are annotated with the same GO CC
   concept. We limit shared edges between nodes to only those GO
@@ -120,7 +120,7 @@
 
 
 
-`{:name "aael-shared-go-mf-edges"
+`{:name "aael-shared-go-mf-edges-exact-only"
   :description "This rule produces reified edges between two hanalyzer
   nodes that have GGPs that are annotated with the same GO MF
   concept. We limit shared edges between nodes to only those GO
