@@ -16,14 +16,23 @@
              [clojure.pprint :refer [pprint]]))
 
 
-(def sample-kb-triples '((ex/h1 iaohan/reliability_aael 0.003165)
-                         (ex/h2 iaohan/reliability_aael 0.0029346)
-                         (ex/h3 iaohan/reliability_aael 0.0)
-                         (ex/h4 iaohan/reliability_aael 1.000581)
-                         (ex/h5 iaohan/reliability_aael 0.007044)
-                         (ex/h6 iaohan/reliability_aael 0.0183835)
-                         (ex/h7 iaohan/reliability_aael 1.0002906)
-                         (ex/h8 iaohan/reliability_aael 0.0002034)))
+(def sample-kb-triples '((iaohan/HAN_0000005 rdfs/subClassOf iaohan/HAN_0000002)
+                         (iaohan/HAN_0000006 rdfs/subClassOf iaohan/HAN_0000002)
+                         (iaohan/HAN_0000007 rdfs/subClassOf iaohan/HAN_0000002)
+                         (iaohan/HAN_0000008 rdfs/subClassOf iaohan/HAN_0000002)
+                         (iaohan/HAN_0000012 rdfs/subClassOf iaohan/HAN_0000002)
+                         (iaohan/HAN_0000013 rdfs/subClassOf iaohan/HAN_0000002)
+                         (iaohan/HAN_0000014 rdfs/subClassOf iaohan/HAN_0000002)
+                         (iaohan/HAN_0000015 rdfs/subClassOf iaohan/HAN_0000002)
+                         
+                         (iaohan/HAN_0000005 iaohan/reliability_aael 0.003165)
+                         (iaohan/HAN_0000006 iaohan/reliability_aael 0.0029346)
+                         (iaohan/HAN_0000007 iaohan/reliability_aael 0.0)
+                         (iaohan/HAN_0000008 iaohan/reliability_aael 1.000581)
+                         (iaohan/HAN_0000012 iaohan/reliability_aael 0.007044)
+                         (iaohan/HAN_0000013 iaohan/reliability_aael 0.0183835)
+                         (iaohan/HAN_0000014 iaohan/reliability_aael 1.0002906)
+                         (iaohan/HAN_0000015 iaohan/reliability_aael 0.0002034)))
                                   
 (def new-triples '())
 

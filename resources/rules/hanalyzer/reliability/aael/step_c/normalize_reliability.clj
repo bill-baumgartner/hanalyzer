@@ -13,7 +13,8 @@
 
   :sparql-string "PREFIX iaohan: <http://kabob.ucdenver.edu/iao/hanalyzer/> 
                   select ?edge_type (xsd:float(?reliability_score)/(xsd:float(?max_r) + 1) as ?norm_reliability)
-                  WHERE {
+                  WHERE { 
+                     ?edge_type rdfs:subClassOf* iaohan:HAN_0000002 .
   	             ?edge_type iaohan:reliability_aael ?reliability_score
 	             {
   		        select (max(?reliability_score) as ?max_r) {
