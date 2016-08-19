@@ -26,7 +26,7 @@
          (:optional
           ((?/ice rdf/type ?/ice_category)))
          (:or (:not (:bound ?/ice_category))
-              (:not (== ?/qualifier iaokegg/GlobalOverviewMap)))
+              (:not (== ?/ice_category iaokegg/GlobalOverviewMap)))
          
          (?/pathway rdfs/label ?/edgeLabel)
 
