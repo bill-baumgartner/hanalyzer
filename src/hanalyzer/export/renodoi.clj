@@ -12,7 +12,9 @@
             [clojure.string :as string]
             [edu.ucdenver.ccp.kr.kb :refer [*kb*]]
             [edu.ucdenver.ccp.kr.rdf :refer [sym-to-long-name *ns-map-to-long*]]
-            [edu.ucdenver.ccp.kabob.build.input-kb :refer [open-kb]])
+            [edu.ucdenver.ccp.kabob.build.input-kb :refer [open-kb]]
+            [hanalyzer.export.renodoi-node-ids-file-gen :refer [build-node-ids-files]]
+            [hanalyzer.export.renodoi-id2termmappings-file-gen :refer [build-id2termmappings-files]])
   (:gen-class))
 
 
@@ -92,7 +94,7 @@
           (visit-sparql source-connection
                         (fn [bindings]
     ;;                      (prn (str "BINDINGS: " bindings))
-                          (.write w (str ('?/node1 bindings) "\tHAN\t" ('?/node2 bindings) "\n")))
+                          (.write w (str ('?/node1 bindings) "\tKnowledge\t" ('?/node2 bindings) "\n")))
                           sparql-string))
           (finally (close source-connection))))))
 
@@ -226,7 +228,6 @@
                   edu.ucdenver.ccp.kr.rdf/*use-inference* false]
           (visit-sparql source-connection
                         (fn [bindings]
-                          (prn (str "BINDINGS: " bindings))
                           (.write w (str ('?/node bindings) "," ('?/labels bindings) "\n")))
                           sparql-string))
           (finally (close source-connection))))))
@@ -293,13 +294,14 @@
           (visit-sparql source-connection
                         (fn [bindings]
                           (.write w (str ('?/node1 bindings)
-                                         " (HAN) "
+                                         " (Knowledge) "
                                          ('?/node2 bindings)
-                                         "\t"
+                                         " = "
                                          (ee-string ('?/source_edge_types bindings))
                                          "\n")))
                           sparql-string))
           (finally (close source-connection))))))
+
 
 
 
@@ -319,5 +321,7 @@
       "sif" (build-sif-file options)
       "id2sym" (build-node-id-to-symbol-file options)
       "ee" (build-edge-experts-file options)
+      "node.id.files" (build-node-ids-files options)
+      "id2term.mapping.files" (build-id2termmappings-files options)
       (exit 1 (usage summary)))))
 
