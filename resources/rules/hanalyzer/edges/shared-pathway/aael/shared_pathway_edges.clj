@@ -18,7 +18,16 @@
          (?/taxon_r rdf/type owl/Restriction)
          (?/taxon_r owl/someValuesFrom obo/NCBITaxon_7159)
          (?/pathway rdfs/subClassOf ?/taxon_r) ;; the pathway must belong to the specified taxon
-         (?/pathway [rdfs/subClassOf *] obo/INO_0000003) ;; INO_0000003 = pathway
+         ;;(?/pathway [rdfs/subClassOf *] obo/INO_0000003) ;; INO_0000003 = pathway
+         (?/pathway rdfs/subClassOf ?/canonical_pathway)
+         (?/ice obo/IAO_0000219 ?/canonical_pathway)
+
+         ;; Exclude the KEGG Global/Overview maps as they are too general
+         (:optional
+          ((?/ice rdf/type ?/ice_category)))
+         (:or (:not (:bound ?/ice_category))
+              (:not (== ?/qualifier iaokegg/GlobalOverviewMap)))
+         
          (?/pathway rdfs/label ?/edgeLabel)
 
          ;; the pathway must have two different participants that
