@@ -156,10 +156,11 @@
                   edu.ucdenver.ccp.kr.rdf/*use-inference* false]
           (visit-sparql source-connection
                         (fn [bindings]
-                          (.write w (str ('?/ice_id bindings)
-                                         "\t"
-                                         ('?/labels bindings)
-                                         "\n")))
+                          (.write w (str
+                                     (sym-to-long-name ('?/ice_id bindings))
+                                     "\t"
+                                     ('?/labels bindings)
+                                     "\n")))
                           sparql-string))
         (finally (close source-connection))))))
 
