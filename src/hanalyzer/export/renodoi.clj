@@ -14,7 +14,8 @@
             [edu.ucdenver.ccp.kr.rdf :refer [sym-to-long-name *ns-map-to-long*]]
             [edu.ucdenver.ccp.kabob.build.input-kb :refer [open-kb]]
             [hanalyzer.export.renodoi-node-ids-file-gen :refer [build-node-ids-files]]
-            [hanalyzer.export.renodoi-id2termmappings-file-gen :refer [build-id2termmappings-files]])
+            [hanalyzer.export.renodoi-id2termmappings-file-gen :refer [build-id2termmappings-files]]
+            [hanalyzer.export.renodoi-noa-file-gen :refer [build-noa-files]])
   (:gen-class))
 
 
@@ -42,6 +43,9 @@
         "  sif        Create a .sif file containing the Hanalyzer layer network"
         "  id2sym     Create a .csv file containing a mapping from node IDs in the .sif file to a human-readable label."
         "  ee         Create the edge-experts file that details which sources contributed to each hanalyzer edge."
+        "  node.id.files "
+        "  id2term.mapping.files "
+        "  noa "
         ""
         "Please refer to the manual page for more information."]
        (string/join \newline)))
@@ -323,5 +327,6 @@
       "ee" (build-edge-experts-file options)
       "node.id.files" (build-node-ids-files options)
       "id2term.mapping.files" (build-id2termmappings-files options)
+      "noa" (build-noa-files options)
       (exit 1 (usage summary)))))
 
