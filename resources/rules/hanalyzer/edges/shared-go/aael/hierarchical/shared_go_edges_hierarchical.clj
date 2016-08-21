@@ -160,7 +160,7 @@
                    :ns "iaohan" :prefix "HANEDGE_GOMF_"}])
 
   :body ((?/go iaohan/resnik-concept-prob-aael ?/prob)
-         (< ?/prob 0.01)
+         (< ?/prob 0.005)
          (?/go oboInOwl/hasOBONamespace ["molecular_function"])
 
          (?/go_ice obo/IAO_0000219 ?/go) ;; IAO:denotes
