@@ -25,7 +25,7 @@
 
 
 (defn build-noa-files-for-source [options source-string]
-  (prn options)
+    (prn (str "Building noa files [" source-string "]..."))
   (with-open [w_ids (clojure.java.io/writer
                      (str (:output-directory options)
                           "/commonattributes-plugin-files/network."
@@ -41,19 +41,15 @@
       (.write w_names (str source-string "NAMES (class=String)\n"))
       (.write w_ids (str source-string "IDs (class=String)\n"))
       (doall (map #(let [node-id (first (clojure.string/split % #" = "))
-                  ids     (rest (clojure.string/split % #" = "))
-                  id-list (slash-delimited-string ids identity)
-                  name-list (slash-delimited-string ids term-id-to-label-map)]
-              (prn (str "NODE_ID: " node-id))
-              (prn (str "IDS: " ids))
-              (prn (str "ID LIST: " id-list))
-              (prn (str "name-list: " name-list))
-              (.write w_names (str node-id " = " name-list "\n"))
-              (.write w_ids (str node-id " = " id-list "\n")))
-           ;; skip the first two lines
-           (rest (rest (clojure.string/split
-                        (slurp node-ids-txt-file)
-                        #"\n"))))))))
+                         ids     (rest (clojure.string/split % #" = "))
+                         id-list (slash-delimited-string ids identity)
+                         name-list (slash-delimited-string ids term-id-to-label-map)]
+                     (.write w_names (str node-id " = " name-list "\n"))
+                     (.write w_ids (str node-id " = " id-list "\n")))
+                  ;; skip the first two lines
+                  (rest (rest (clojure.string/split
+                               (slurp node-ids-txt-file)
+                               #"\n"))))))))
 
 (defn build-noa-files [options]
   (build-noa-files-for-source options "PW")
