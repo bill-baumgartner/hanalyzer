@@ -8,24 +8,35 @@
         [edu.ucdenver.ccp.kr.kb]
         [edu.ucdenver.ccp.kr.rdf]
         [edu.ucdenver.ccp.kr.sparql])
-  (:require [clojure.tools.cli :refer [parse-opts]]
+  (:require [clojure.tools.cli
+             :refer [parse-opts]]
             [clojure.string :as string]
-            [edu.ucdenver.ccp.kr.kb :refer [*kb*]]
-            [edu.ucdenver.ccp.kr.rdf :refer [sym-to-long-name *ns-map-to-long*]]
-            [edu.ucdenver.ccp.kabob.build.input-kb :refer [open-kb]]
-            [hanalyzer.export.renodoi-node-ids-file-gen :refer [build-node-ids-files]]
-            [hanalyzer.export.renodoi-id2termmappings-file-gen :refer [build-id2termmappings-files]]
-            [hanalyzer.export.renodoi-noa-file-gen :refer [build-noa-files]])
+            [edu.ucdenver.ccp.kr.kb
+             :refer [*kb*]]
+            [edu.ucdenver.ccp.kr.rdf
+             :refer [sym-to-long-name
+                     *ns-map-to-long*]]
+            [edu.ucdenver.ccp.kabob.build.input-kb
+             :refer [open-kb]]
+            [hanalyzer.export.renodoi-node-ids-file-gen
+             :refer [build-node-ids-files]]
+            [hanalyzer.export.renodoi-id2termmappings-file-gen
+             :refer [build-id2termmappings-files]]
+            [hanalyzer.export.renodoi-noa-file-gen
+             :refer [build-noa-files]]
+            [hanalyzer.export.renodoi-doi-gen-nodes-v-neighbors
+             :refer [build-nodes-v-neighbors-doi-file]])
   (:gen-class))
 
 
 (def cli-options
   [["-s" "--server-url SERVER_URL" "Triple store server URL, e.g. http://url/to/server:port"]
-   ["-n" "--repo-name REPOSITORY_NAME" "Name of the repository to open."]
+   ["-r" "--repo-name REPOSITORY_NAME" "Name of the repository to open."]
    ["-u" "--username USERNAME" "User credential to access repository."]
    ["-p" "--password PASSWORD" "Password credential to access repository."]
    ["-i" "--id_file ID_FILE" "File containing identifier URIs to represent as nodes in the network"]
    ["-o" "--output-directory OUTPUT_DIRECTORY" "Path to folder where generated files will be stored."]
+   ["-n" "--seed-nodes-file SEED_NODES" "File containing seed nodes for the network."]
    ["-h" "--help"]])
 
 (defn usage [options-summary]
@@ -86,8 +97,7 @@
 
 
 (defn build-sif-file [options]
-  (prn options)
-  ;;(prn (str "SIF QUERY: " (sif-file-query options)))
+  (prn (str "Building sif file..."))
   (let [source-connection (open-kb options)
         sparql-string (sif-file-query options)]
     (with-open [w (clojure.java.io/writer
@@ -97,10 +107,9 @@
                   edu.ucdenver.ccp.kr.rdf/*use-inference* false]
           (visit-sparql source-connection
                         (fn [bindings]
-    ;;                      (prn (str "BINDINGS: " bindings))
                           (.write w (str ('?/node1 bindings) "\tKnowledge\t" ('?/node2 bindings) "\n")))
-                          sparql-string))
-          (finally (close source-connection))))))
+                        sparql-string))
+        (finally (close source-connection))))))
 
 ;;; ===============
 ;;; BUILD NODE FILE
@@ -126,8 +135,7 @@
 
 
 (defn build-nodes-file [options]
-  ;;(prn options)
-  ;;(prn (str "NODE NEIGHBORS QUERY: " (node-query options)))
+    (prn (str "Building node uris file..."))
   (let [source-connection (open-kb options)
         sparql-string (node-query options)]
     (with-open [w (clojure.java.io/writer
@@ -177,8 +185,7 @@
 
 
 (defn build-nodes-plus-neighbors-file [options]
-  (prn options)
-  (prn (str "NODE NEIGHBORS QUERY: " (node-neighbors-query options)))
+    (prn (str "Building nodes+neighbors file..."))
   (let [source-connection (open-kb options)
         node-sparql-string (node-query options)
         neighbor-sparql-string (node-neighbors-query options)]
@@ -221,7 +228,7 @@
        group by ?node"))
 
 (defn build-node-id-to-symbol-file [options]
-  (prn options)
+    (prn (str "Building node-id-to-symbol file..."))
   (let [source-connection (open-kb options)
         sparql-string (id2sym-file-query options)]
     (with-open [w (clojure.java.io/writer
@@ -286,8 +293,7 @@
                           (repeat "///")))))
 
 (defn build-edge-experts-file [options]
-  (prn options)
-;;  (pprint (str "SIF QUERY: " (sif-file-query options)))
+  (prn (str "Building edge-experts file..."))
   (let [source-connection (open-kb options)
         sparql-string (ee-file-query options)]
     (with-open [w (clojure.java.io/writer
@@ -328,5 +334,12 @@
       "node.id.files" (build-node-ids-files options)
       "id2term.mapping.files" (build-id2termmappings-files options)
       "noa" (build-noa-files options)
+      "doi.nodes" (build-nodes-v-neighbors-doi-file options)
+      "all" (time (do (time (build-sif-file options))
+                      (time (build-node-id-to-symbol-file options))
+                      (time (build-edge-experts-file options))
+                      (time (build-node-ids-files options))
+                      (time (build-id2termmappings-files options))
+                      (time (build-noa-files options))))
       (exit 1 (usage summary)))))
 
