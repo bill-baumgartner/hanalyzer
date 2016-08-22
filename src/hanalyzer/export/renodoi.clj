@@ -107,7 +107,7 @@
                   edu.ucdenver.ccp.kr.rdf/*use-inference* false]
           (visit-sparql source-connection
                         (fn [bindings]
-                          (.write w (str ('?/node1 bindings) "\tKnowledge\t" ('?/node2 bindings) "\n")))
+                          (.write w (str (string/upper-case (str ('?/node1 bindings))) "\tKnowledge\t" (string/upper-case (str ('?/node2 bindings))) "\n")))
                         sparql-string))
         (finally (close source-connection))))))
 
@@ -239,7 +239,7 @@
                   edu.ucdenver.ccp.kr.rdf/*use-inference* false]
           (visit-sparql source-connection
                         (fn [bindings]
-                          (.write w (str ('?/node bindings) "," ('?/labels bindings) "\n")))
+                          (.write w (str (string/upper-case (str ('?/node bindings))) "," ('?/labels bindings) "\n")))
                           sparql-string))
           (finally (close source-connection))))))
 
@@ -303,9 +303,9 @@
                   edu.ucdenver.ccp.kr.rdf/*use-inference* false]
           (visit-sparql source-connection
                         (fn [bindings]
-                          (.write w (str ('?/node1 bindings)
+                          (.write w (str (string/upper-case (str ('?/node1 bindings)))
                                          " (Knowledge) "
-                                         ('?/node2 bindings)
+                                         (string/upper-case (str ('?/node2 bindings)))
                                          " = "
                                          (ee-string ('?/source_edge_types bindings))
                                          "\n")))

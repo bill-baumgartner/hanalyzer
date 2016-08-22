@@ -121,7 +121,7 @@
                   edu.ucdenver.ccp.kr.rdf/*use-inference* false]
           (visit-sparql source-connection
                         (fn [bindings]
-                          (.write w (str ('?/node bindings)
+                          (.write w (str (string/upper-case (str ('?/node bindings)))
                                          " = "
                                          ('?/ice_ids bindings)
                                          "\n")))

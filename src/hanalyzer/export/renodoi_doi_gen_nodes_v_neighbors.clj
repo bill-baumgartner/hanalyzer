@@ -4,9 +4,10 @@
   "converts
   '<http://kabob.ucdenver.edu/iao/hanalyzer/HANODE_GorGPorV_BIO_ea674551f8c4f5bd2dada90cb397c2cb>'
   to 'iaohan/HANODE_GorGPorV_BIO_ea674551f8c4f5bd2dada90cb397c2cb'"
-  (clojure.string/replace
-   (clojure.string/replace s "<http://kabob.ucdenver.edu/iao/hanalyzer/" "iaohan/")
-   #">$" "")) ;; remove the trailing '>'
+  (clojure.string/upper-case
+   (clojure.string/replace
+    (clojure.string/replace s "<http://kabob.ucdenver.edu/iao/hanalyzer/" "iaohan/")
+    #">$" ""))) ;; remove the trailing '>'
 
 (defn build-nodes-v-neighbors-doi-file [options]
   "Builds a file in the RenoDoI DoI function format to distinguish
