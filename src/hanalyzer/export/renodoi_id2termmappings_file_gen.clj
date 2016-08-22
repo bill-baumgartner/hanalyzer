@@ -31,18 +31,9 @@
        "}
        ?shared_go_edge iaohan:linksNode ?node .
        ?shared_go_edge rdf:type iaohan:HAN_0000007 . # HAN:shared_go_bp_edge
-       
-# need to run the shared-go-hierarchical rules to get the commonConcept relation
-#?shared_go_edge iaohan:commonConcept ?go .
-       
-       ?shared_go_edge iaohan:denotes ?go_sc1 .
-       ?shared_go_edge iaohan:denotes ?go_sc2 .
-       FILTER (?go_sc1 != ?go_sc2)
-       ?go_sc1 rdfs:subClassOf ?go1 .
-       ?go_sc2 rdfs:subClassOf ?go2 .
-       ?go1 rdfs:subClassOf* ?go2 .
-       ?go2 rdfs:label ?label .
-       ?ice_id obo:IAO_0000219 ?go2 .
+       ?shared_go_edge iaohan:commonConcept ?go .
+       ?go rdfs:label ?label.
+       ?ice_id obo:IAO_0000219 ?go .
        } group by ?ice_id"))
 
 ;;; =======================
@@ -64,18 +55,9 @@
        "}
        ?shared_go_edge iaohan:linksNode ?node .
        ?shared_go_edge rdf:type iaohan:HAN_0000006 . # HAN:shared_go_bp_edge
-       
-# need to run the shared-go-hierarchical rules to get the commonConcept relation
-#?shared_go_edge iaohan:commonConcept ?go .
-       
-       ?shared_go_edge iaohan:denotes ?go_sc1 .
-       ?shared_go_edge iaohan:denotes ?go_sc2 .
-       FILTER (?go_sc1 != ?go_sc2)
-       ?go_sc1 rdfs:subClassOf ?go1 .
-       ?go_sc2 rdfs:subClassOf ?go2 .
-       ?go1 rdfs:subClassOf* ?go2 .
-       ?go2 rdfs:label ?label .
-       ?ice_id obo:IAO_0000219 ?go2 .
+       ?shared_go_edge iaohan:commonConcept ?go .
+       ?go rdfs:label ?label.
+       ?ice_id obo:IAO_0000219 ?go .
        } group by ?ice_id"))
 
 ;;; =======================
@@ -98,25 +80,9 @@
        "}
        ?shared_go_edge iaohan:linksNode ?node .
        ?shared_go_edge rdf:type iaohan:HAN_0000005 . # HAN:shared_go_bp_edge
-       
-# need to run the shared-go-hierarchical rules to get the commonConcept relation
-#?shared_go_edge iaohan:commonConcept ?go .
-       
-       ?shared_go_edge iaohan:denotes ?record1 .
-       ?record1 obo:BFO_0000051 ?go_id_field .
-       ?go_id_field kiao:hasTemplate iaogoa:GpAssociationGoaUniprotFileData_goIDDataField1 .
-       ?go_id_field obo:IAO_0000219 ?go_ice_1 .
-       ?go_ice_1 obo:IAO_0000219 ?go1 .
-       
-       ?shared_go_edge iaohan:denotes ?record2 .
-       ?record2 obo:BFO_0000051 ?go_id_field2 .
-       ?go_id_field2 kiao:hasTemplate iaogoa:GpAssociationGoaUniprotFileData_goIDDataField1 .
-       ?go_id_field2 obo:IAO_0000219 ?ice_id .
-       ?ice_id obo:IAO_0000219 ?go2 .
-       
-       FILTER (?go1 != ?go2)
-       ?go1 rdfs:subClassOf* ?go2 .
-       ?go2 rdfs:label ?label .
+       ?shared_go_edge iaohan:commonConcept ?go .
+       ?go rdfs:label ?label.
+       ?ice_id obo:IAO_0000219 ?go .
        } group by ?ice_id"))
 
 ;;; =======================
@@ -145,10 +111,9 @@
        } group by ?ice_id"))
 
 (defn- build-id2termmappings-file [options source-string query-string-fn]
-  (prn options)
+  (prn (str "Building Id2TermMappings file [" source-string "]..."))
   (let [source-connection (open-kb options)
         sparql-string (query-string-fn options)]
-    (prn (str "Id2TermMappings.txt query for: " source-string "\n" (query-string-fn options)))
     (with-open [w (clojure.java.io/writer
                    (str (:output-directory options) "/commonattributes-plugin-files/network." source-string ".Id2TermMappings.txt"))]
       (try
@@ -169,6 +134,5 @@
   (build-id2termmappings-file options "PW" pathway-id2termmappings-files-query)
   (build-id2termmappings-file options "BP" go-bp-id2termmappings-files-query)
   (build-id2termmappings-file options "CC" go-cc-id2termmappings-files-query)
-  (build-id2termmappings-file options "MF" go-mf-id2termmappings-files-query)
-  
-  )
+  (build-id2termmappings-file options "MF" go-mf-id2termmappings-files-query))
+
