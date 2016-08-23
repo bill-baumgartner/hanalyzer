@@ -133,4 +133,4 @@
   (build-node-ids-file options "PW" pathway-nodeIds-files-query)
   (build-node-ids-file options "BP" go-bp-nodeIds-files-query)
   (build-node-ids-file options "CC" go-cc-nodeIds-files-query)
-  (build-node-ids-file options "MF" go-cc-nodeIds-files-query))
+  (build-node-ids-file options "MF" go-mf-nodeIds-files-query))
