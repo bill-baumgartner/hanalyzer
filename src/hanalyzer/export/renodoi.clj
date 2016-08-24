@@ -25,7 +25,17 @@
             [hanalyzer.export.renodoi-noa-file-gen
              :refer [build-noa-files]]
             [hanalyzer.export.renodoi-doi-gen-nodes-v-neighbors
-             :refer [build-nodes-v-neighbors-doi-file]])
+             :refer [build-nodes-v-neighbors-doi-file]]
+            [hanalyzer.export.renodoi-doi-gen-ppi-edges
+             :refer [build-ppi-edge-doi-files]]
+            [hanalyzer.export.renodoi-edge-evidence-file-gen
+             :refer [build-edge-evidence-file]]
+            [hanalyzer.export.renodoi-doi-gen-custom-edge-groupings
+             :refer [build-custom-edge-doi-files]]
+            [hanalyzer.export.renodoi-doi-gen-only-ppi-edge
+             :refer [build-only-ppi-support-doi-file]]
+            [hanalyzer.export.renodoi-doi-gen-edge-weight
+             :refer [build-edge-weight-doi-files]])
   (:gen-class))
 
 
@@ -297,7 +307,8 @@
   (let [source-connection (open-kb options)
         sparql-string (ee-file-query options)]
     (with-open [w (clojure.java.io/writer
-                   (str (:output-directory options) "/network.edgeExperts.eda"))]
+                   (str (:output-directory options)
+                        "/commonattributes-plugin-files/network.edgeExperts.eda"))]
       (try
         (binding [*kb* source-connection
                   edu.ucdenver.ccp.kr.rdf/*use-inference* false]
@@ -333,8 +344,14 @@
       "ee" (build-edge-experts-file options)
       "node.id.files" (build-node-ids-files options)
       "id2term.mapping.files" (build-id2termmappings-files options)
+      "ev" (build-edge-evidence-file options)
       "noa" (build-noa-files options)
+      "ew" (build-edge-weight-doi-files options)
       "doi.nodes" (build-nodes-v-neighbors-doi-file options)
+      "doi.edges" (do (build-only-ppi-support-doi-file options)
+                      (build-custom-edge-doi-files options)
+                      (build-ppi-edge-doi-files options)
+                      (build-edge-weight-doi-files options))
       "all" (time (do (time (build-sif-file options))
                       (time (build-node-id-to-symbol-file options))
                       (time (build-edge-experts-file options))
