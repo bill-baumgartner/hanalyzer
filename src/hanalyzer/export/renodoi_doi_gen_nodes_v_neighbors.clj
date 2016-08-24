@@ -18,6 +18,6 @@
                    (str (:output-directory options) "/doi/nodes_v_neighbors.doi.csv"))]
       (.write w (str "NodeID,sig_fatBody\n"))
       (doall (map #(if (contains? seed-nodes %)
-                     (.write w (str (shorten-namespace %) ",1\n"))
-                     (.write w (str (shorten-namespace %) ",0\n")))
+                     (.write w (str (shorten-namespace %) ",1.0\n"))
+                     (.write w (str (shorten-namespace %) ",-1.0\n")))
                   all-nodes)))))
