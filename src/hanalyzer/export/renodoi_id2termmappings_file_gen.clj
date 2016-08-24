@@ -113,9 +113,12 @@
 (defn- build-id2termmappings-file [options source-string query-string-fn]
   (prn (str "Building Id2TermMappings file [" source-string "]..."))
   (let [source-connection (open-kb options)
-        sparql-string (query-string-fn options)]
-    (with-open [w (clojure.java.io/writer
-                   (str (:output-directory options) "/commonattributes-plugin-files/network." source-string ".Id2TermMappings.txt"))]
+        sparql-string (query-string-fn options)
+        output-file-name (str (:output-directory options)
+                              "/commonattributes-plugin-files/network."
+                              source-string ".Id2TermMappings.txt")]
+    (clojure.java.io/make-parents output-file-name)
+    (with-open [w (clojure.java.io/writer output-file-name)]
       (try
         (binding [*kb* source-connection
                   edu.ucdenver.ccp.kr.rdf/*use-inference* false]

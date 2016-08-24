@@ -26,18 +26,19 @@
 
 (defn build-noa-files-for-source [options source-string]
     (prn (str "Building noa files [" source-string "]..."))
-  (with-open [w_ids (clojure.java.io/writer
-                     (str (:output-directory options)
-                          "/commonattributes-plugin-files/network."
-                          source-string ".ids.noa"))
-              w_names (clojure.java.io/writer
-                       (str (:output-directory options)
-                            "/commonattributes-plugin-files/network."
-                            source-string ".names.noa"))]
-    (let [term-id-to-label-map (load-id-to-label-map options source-string)
-          node-ids-txt-file (str (:output-directory options)
-                                 "/commonattributes-plugin-files/network."
-                                 source-string ".NodeIds.txt")]
+  (let [output-file-name-ids (str (:output-directory options)
+                                  "/commonattributes-plugin-files/network."
+                                  source-string ".ids.noa")
+        output-file-name-names (str (:output-directory options)
+                                    "/commonattributes-plugin-files/network."
+                                    source-string ".names.noa")
+        term-id-to-label-map (load-id-to-label-map options source-string)
+        node-ids-txt-file (str (:output-directory options)
+                               "/commonattributes-plugin-files/network."
+                               source-string ".NodeIds.txt")]
+    (clojure.java.io/make-parents output-file-name-ids)
+    (with-open [w_ids (clojure.java.io/writer output-file-name-ids)
+                w_names (clojure.java.io/writer output-file-name-names)]
       (.write w_names (str source-string "\n"))
       (.write w_ids (str source-string "\n"))
       (doall (map #(let [node-id (first (clojure.string/split % #" = "))

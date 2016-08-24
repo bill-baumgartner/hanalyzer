@@ -144,12 +144,11 @@
 (defn- build-edge-evidence-file-part [options source-str query-str-fn append-option]
   (prn (str "Building edge-evidence file [" source-str "]..."))
   (let [source-connection (open-kb options)
-        sparql-string (query-str-fn options)]
-    (prn (str "SPARQL: " sparql-string))
-    (with-open [w (clojure.java.io/writer
-                   (str (:output-directory options)
-                        "/commonattributes-plugin-files/edgeEvidence.txt")
-                   :append append-option)]
+        sparql-string (query-str-fn options)
+        output-file-name (str (:output-directory options)
+                              "/commonattributes-plugin-files/edgeEvidence.txt")]
+    (clojure.java.io/make-parents output-file-name)
+    (with-open [w (clojure.java.io/writer output-file-name :append append-option)]
       (try
         (binding [*kb* source-connection
                   edu.ucdenver.ccp.kr.rdf/*use-inference* false]

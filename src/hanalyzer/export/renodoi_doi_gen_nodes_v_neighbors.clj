@@ -13,9 +13,10 @@
   "Builds a file in the RenoDoI DoI function format to distinguish
   between seed nodes and nodes that were added as neighbors."
   (let [seed-nodes (into #{} (clojure.string/split (slurp (:seed-nodes-file options)) #"\n"))
-        all-nodes (into #{} (clojure.string/split (slurp (:id_file options)) #"\n"))]
-    (with-open [w (clojure.java.io/writer
-                   (str (:output-directory options) "/doi/nodes_v_neighbors.doi.csv"))]
+        all-nodes (into #{} (clojure.string/split (slurp (:id_file options)) #"\n"))
+        output-file-name (str (:output-directory options) "/doi/nodes_v_neighbors.doi.csv")]
+    (clojure.java.io/make-parents output-file-name)
+    (with-open [w (clojure.java.io/writer output-file-name)]
       (.write w (str "NodeID,sig_fatBody\n"))
       (doall (map #(if (contains? seed-nodes %)
                      (.write w (str (shorten-namespace %) ",1.0\n"))

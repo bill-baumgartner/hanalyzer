@@ -111,9 +111,12 @@
 (defn- build-node-ids-file [options source-string query-string-fn]
     (prn (str "Building NodeIds file [" source-string "]..."))
   (let [source-connection (open-kb options)
-        sparql-string (query-string-fn options)]
-    (with-open [w (clojure.java.io/writer
-                   (str (:output-directory options) "/commonattributes-plugin-files/network." source-string ".NodeIds.txt"))]
+        sparql-string (query-string-fn options)
+        output-file-name (str (:output-directory options)
+                              "/commonattributes-plugin-files/network."
+                              source-string ".NodeIds.txt")]
+    (clojure.java.io/make-parents output-file-name)
+    (with-open [w (clojure.java.io/writer output-file-name)]
       (.write w (str source-string " URLBASE:http://not/specified URLEND:\n"))
       (.write w (str "Mapping File: network." source-string ".Id2TermMappings.txt\n"))
       (try

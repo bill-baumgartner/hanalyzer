@@ -46,10 +46,11 @@
 (defn- build-ppi-edge-doi-file [options ppi-type1-str ppi-type2-str norm-fn]
   (prn (str "Building PPI edge DOI file [" (ppi-type-to-label-map ppi-type1-str) "]..."))
   (let [source-connection (open-kb options)
-        sparql-string (ppi-doi-files-query options ppi-type1-str ppi-type2-str)]
-   ;; (prn (str "SPARQL: " sparql-string))
-    (with-open [w (clojure.java.io/writer
-                   (str (:output-directory options) "/doi/" (ppi-type-to-label-map ppi-type1-str) ".doi.csv"))]
+        sparql-string (ppi-doi-files-query options ppi-type1-str ppi-type2-str)
+        output-file-name (str (:output-directory options)
+                              "/doi/" (ppi-type-to-label-map ppi-type1-str) ".doi.csv")]
+    (clojure.java.io/make-parents output-file-name)
+    (with-open [w (clojure.java.io/writer output-file-name)]
       (.write w (str "NodeId, NodeId, " (ppi-type-to-label-map ppi-type1-str) "_score\n"))
       (try
         (binding [*kb* source-connection

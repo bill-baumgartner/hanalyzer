@@ -21,9 +21,10 @@
   processseed nodes and nodes that were added as neighbors."
   (let [edge-experts-file  (str (:output-directory options)
                                 "/commonattributes-plugin-files/network.edgeExperts.eda")
-        edges (into #{} (clojure.string/split (slurp edge-experts-file) #"\n"))]
-    (with-open [w (clojure.java.io/writer
-                   (str (:output-directory options) "/doi/only-ppi.doi.csv"))]
+        edges (into #{} (clojure.string/split (slurp edge-experts-file) #"\n"))
+        output-file-name (str (:output-directory options) "/doi/only-ppi.doi.csv")]
+    (clojure.java.io/make-parents output-file-name)
+    (with-open [w (clojure.java.io/writer output-file-name)]
       (.write w (str "NodeID,NodeID,1=only ppi, -1=at least one other source\n"))
       (doall (map #(let [experts-str (last (clojure.string/split % #" = "))
                          experts-str-no-ppi (-> (clojure.string/replace experts-str "HC_PPI_String" "")

@@ -41,10 +41,10 @@
 (defn- build-edge-weight-doi-file [options file-label query-fn]
   (prn (str "Building edge weight DOI file [" file-label "]..."))
   (let [source-connection (open-kb options)
-        sparql-string (query-fn options)]
-    ;;(prn (str "SPARQL: " sparql-string))
-    (with-open [w (clojure.java.io/writer
-                   (str (:output-directory options) "/doi/" file-label ".doi.csv"))]
+        sparql-string (query-fn options)
+        output-file-name (str (:output-directory options) "/doi/" file-label ".doi.csv")]
+    (clojure.java.io/make-parents output-file-name)
+    (with-open [w (clojure.java.io/writer output-file-name)]
       (.write w (str "NodeId, NodeId, score\n"))
       (try
         (binding [*kb* source-connection

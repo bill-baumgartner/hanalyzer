@@ -109,9 +109,10 @@
 (defn build-sif-file [options]
   (prn (str "Building sif file..."))
   (let [source-connection (open-kb options)
-        sparql-string (sif-file-query options)]
-    (with-open [w (clojure.java.io/writer
-                   (str (:output-directory options) "/network.sif"))]
+        sparql-string (sif-file-query options)
+        output-file-name (str (:output-directory options) "/network.sif")]
+    (clojure.java.io/make-parents output-file-name)
+    (with-open [w (clojure.java.io/writer output-file-name)]
       (try
         (binding [*kb* source-connection
                   edu.ucdenver.ccp.kr.rdf/*use-inference* false]
@@ -147,9 +148,10 @@
 (defn build-nodes-file [options]
     (prn (str "Building node uris file..."))
   (let [source-connection (open-kb options)
-        sparql-string (node-query options)]
-    (with-open [w (clojure.java.io/writer
-                   (str (:output-directory options) "/nodes.uri"))]
+        sparql-string (node-query options)
+        output-file-name (str (:output-directory options) "/nodes.uri")]
+    (clojure.java.io/make-parents output-file-name)
+    (with-open [w (clojure.java.io/writer output-file-name)]
       (try
         (binding [*kb* source-connection
                   edu.ucdenver.ccp.kr.rdf/*use-inference* false]
@@ -159,6 +161,45 @@
                           sparql-string))
           (finally (close source-connection))))))
 
+
+;;; =====================
+;;; BUILD ID-to-NODE FILE
+;;; =====================
+
+(defn id-to-node-query [options]
+  "Queries for the hanalyzer node for the input identifiers"
+  (str "PREFIX franzOption_memoryLimit: <franz:85g> 
+        PREFIX franzOption_memoryExhaustionWarningPercentage: <franz:95> 
+        PREFIX franzOption_clauseReorderer: <franz:identity> 
+        PREFIX franzOption_chunkProcessingAllowed: <franz:yes> 
+        PREFIX obo: <http://purl.obolibrary.org/obo/> 
+        PREFIX iaohan: <http://kabob.ucdenver.edu/iao/hanalyzer/> 
+        PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+        select ?id_ice ?node {
+           VALUES ?id_ice {"
+              (slurp (:id_file options))
+           "}
+            ?id_ice obo:IAO_0000219 ?bioentity .
+            ?node iaohan:denotes ?bioentity .
+          }"))
+
+
+(defn build-id-to-node-file [options]
+    (prn (str "Building id-to-node mapping file..."))
+  (let [source-connection (open-kb options)
+        sparql-string (id-to-node-query options)
+        output-file-name (str (:output-directory options) "/id-to-node.map.txt")]
+    (clojure.java.io/make-parents output-file-name)
+    (with-open [w (clojure.java.io/writer output-file-name)]
+      (try
+        (binding [*kb* source-connection
+                  edu.ucdenver.ccp.kr.rdf/*use-inference* false]
+          (visit-sparql source-connection
+                        (fn [bindings]
+                          (.write w (str ('?/id_ice bindings) "\t" ('?/node bindings) "\n")))
+                          sparql-string))
+          (finally (close source-connection))))))
 
 ;;; =========================
 ;;; BUILD NODE NEIGHBORS FILE
@@ -198,9 +239,10 @@
     (prn (str "Building nodes+neighbors file..."))
   (let [source-connection (open-kb options)
         node-sparql-string (node-query options)
-        neighbor-sparql-string (node-neighbors-query options)]
-    (with-open [w (clojure.java.io/writer
-                   (str (:output-directory options) "/nodes+neighbors.uri"))]
+        neighbor-sparql-string (node-neighbors-query options)
+        output-file-name (str (:output-directory options) "/nodes+neighbors.uri")]
+    (clojure.java.io/make-parents output-file-name)
+    (with-open [w (clojure.java.io/writer output-file-name)]
       (try
         ;; get the seed nodes and write to output file
         (binding [*kb* source-connection
@@ -219,6 +261,53 @@
 ;;; ===========================
 ;;; BUILD NODE ID TO LABEL FILE
 ;;; ===========================
+
+(defn id2sym-file-query-aael [options]
+ (str "PREFIX franzOption_memoryLimit: <franz:85g> 
+        PREFIX franzOption_memoryExhaustionWarningPercentage: <franz:95> 
+        PREFIX franzOption_clauseReorderer: <franz:identity> 
+        PREFIX franzOption_chunkProcessingAllowed: <franz:yes> 
+        PREFIX obo: <http://purl.obolibrary.org/obo/> 
+        PREFIX iaohan: <http://kabob.ucdenver.edu/iao/hanalyzer/> 
+        PREFIX iaovectorbase: <http://kabob.ucdenver.edu/iao/vectorbase/> 
+        PREFIX kiao: <http://kabob.ucdenver.edu/iao/> 
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        select distinct ?node ?labels {
+        VALUES ?node {"
+       (slurp (:id_file options))
+       "}
+        {
+             select ?node (group_concat(?node_label ; separator = ';') as ?default_labels) {
+                VALUES ?node {"
+                (slurp (:id_file options))
+               "}
+                ?node iaohan:denotes ?bioentity .
+                ?bioentity rdfs:label ?node_label .       
+              }
+              group by ?node
+        }
+OPTIONAL {      
+        ?node iaohan:denotes ?bioentity .
+        ?vb_ice obo:IAO_0000219 ?bioentity .
+        ?vb_seq_id_field obo:IAO_0000219 ?vb_ice .
+        ?vb_seq_id_field kiao:hasTemplate iaovectorbase:VectorBaseFastaFileRecord_geneIdDataField1 .
+        ?record obo:BFO_0000051 ?vb_seq_id_field .
+OPTIONAL {        
+    ?record obo:BFO_0000051 ?vb_seq_name_field .
+            ?vb_seq_name_field kiao:hasTemplate iaovectorbase:VectorBaseFastaFileRecord_sequenceNameDataField1 .
+            ?vb_seq_name_field obo:IAO_0000219 ?sequence_name .
+        }
+}
+
+        BIND(if( bound(?vb_ice), 
+                 CONCAT(STR(COALESCE(?sequence_name,'')),
+                        ';',
+                         REPLACE(REPLACE(STR(?vb_ice),
+                                         'http://kabob.ucdenver.edu/iao/vectorbase/VECTORBASE_',''),
+                                 '_ICE','')),
+                 ?default_labels) AS ?labels)
+          
+       }"))
 
 (defn id2sym-file-query [options]
  (str "PREFIX franzOption_memoryLimit: <franz:85g> 
@@ -240,9 +329,10 @@
 (defn build-node-id-to-symbol-file [options]
     (prn (str "Building node-id-to-symbol file..."))
   (let [source-connection (open-kb options)
-        sparql-string (id2sym-file-query options)]
-    (with-open [w (clojure.java.io/writer
-                   (str (:output-directory options) "/network.geneID2Symbol.csv"))]
+        sparql-string (id2sym-file-query-aael options)
+        output-file-name (str (:output-directory options) "/network.geneID2Symbol.csv")]
+    (clojure.java.io/make-parents output-file-name)
+    (with-open [w (clojure.java.io/writer output-file-name)]
       (.write w (str "NodeID,Label\n"))
       (try
         (binding [*kb* source-connection
@@ -305,10 +395,11 @@
 (defn build-edge-experts-file [options]
   (prn (str "Building edge-experts file..."))
   (let [source-connection (open-kb options)
-        sparql-string (ee-file-query options)]
-    (with-open [w (clojure.java.io/writer
-                   (str (:output-directory options)
-                        "/commonattributes-plugin-files/network.edgeExperts.eda"))]
+        sparql-string (ee-file-query options)
+        output-file-name  (str (:output-directory options)
+                               "/commonattributes-plugin-files/network.edgeExperts.eda")]
+    (clojure.java.io/make-parents output-file-name)
+    (with-open [w (clojure.java.io/writer output-file-name)]
       (try
         (binding [*kb* source-connection
                   edu.ucdenver.ccp.kr.rdf/*use-inference* false]
@@ -339,6 +430,7 @@
     (case (first arguments)
       "nodes" (build-nodes-file options)
       "neigh" (build-nodes-plus-neighbors-file options)
+      "id2node" (build-id-to-node-file options)
       "sif" (build-sif-file options)
       "id2sym" (build-node-id-to-symbol-file options)
       "ee" (build-edge-experts-file options)
@@ -346,12 +438,14 @@
       "id2term.mapping.files" (build-id2termmappings-files options)
       "ev" (build-edge-evidence-file options)
       "noa" (build-noa-files options)
+      "seeds" (build-custom-edge-doi-files options)
       "doi.nodes" (build-nodes-v-neighbors-doi-file options)
       "doi.edges" (do (build-only-ppi-support-doi-file options)
                       (build-custom-edge-doi-files options)
                       (build-ppi-edge-doi-files options)
                       (build-edge-weight-doi-files options))
       "all" (time (do (time (build-sif-file options))
+                      (time (build-id-to-node-file options))
                       (time (build-node-id-to-symbol-file options))
                       (time (build-edge-experts-file options))
                       (time (build-node-ids-files options))
@@ -359,7 +453,7 @@
                       (time (build-noa-files options))
                       (time (build-edge-evidence-file options))
                       (time (build-nodes-v-neighbors-doi-file options))
-                      (time (build-only-ppi-support-doi-fil options))
+                      (time (build-only-ppi-support-doi-file options))
                       (time (build-custom-edge-doi-files options))
                       (time (build-ppi-edge-doi-files options))
                       (time (build-edge-weight-doi-files options))))
