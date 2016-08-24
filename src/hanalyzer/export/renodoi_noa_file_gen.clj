@@ -38,8 +38,8 @@
           node-ids-txt-file (str (:output-directory options)
                                  "/commonattributes-plugin-files/network."
                                  source-string ".NodeIds.txt")]
-      (.write w_names (str source-string "NAMES (class=String)\n"))
-      (.write w_ids (str source-string "IDs (class=String)\n"))
+      (.write w_names (str source-string "\n"))
+      (.write w_ids (str source-string "\n"))
       (doall (map #(let [node-id (first (clojure.string/split % #" = "))
                          ids     (rest (clojure.string/split % #" = "))
                          id-list (slash-delimited-string ids identity)
