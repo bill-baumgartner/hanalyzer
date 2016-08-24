@@ -131,8 +131,8 @@
 
 
 (defn build-id2termmappings-files [options]
-  (build-id2termmappings-file options "PW" pathway-id2termmappings-files-query)
-  (build-id2termmappings-file options "BP" go-bp-id2termmappings-files-query)
-  (build-id2termmappings-file options "CC" go-cc-id2termmappings-files-query)
-  (build-id2termmappings-file options "MF" go-mf-id2termmappings-files-query))
+  (build-id2termmappings-file options "Kegg" pathway-id2termmappings-files-query)
+  (build-id2termmappings-file options "GeneOntology_BP" go-bp-id2termmappings-files-query)
+  (build-id2termmappings-file options "GeneOntology_CC" go-cc-id2termmappings-files-query)
+  (build-id2termmappings-file options "GeneOntology_MF" go-mf-id2termmappings-files-query))
 

@@ -130,7 +130,7 @@
 
 
 (defn build-node-ids-files [options]
-  (build-node-ids-file options "PW" pathway-nodeIds-files-query)
-  (build-node-ids-file options "BP" go-bp-nodeIds-files-query)
-  (build-node-ids-file options "CC" go-cc-nodeIds-files-query)
-  (build-node-ids-file options "MF" go-mf-nodeIds-files-query))
+  (build-node-ids-file options "Kegg" pathway-nodeIds-files-query)
+  (build-node-ids-file options "GeneOntology_BP" go-bp-nodeIds-files-query)
+  (build-node-ids-file options "GeneOntology_CC" go-cc-nodeIds-files-query)
+  (build-node-ids-file options "GeneOntology_MF" go-mf-nodeIds-files-query))

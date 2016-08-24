@@ -282,10 +282,10 @@
        }"))
 
 (def edge-type-label-map
-  {"http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000005" "MF"
-   "http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000006" "CC"
-   "http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000007" "BP"
-   "http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000008" "PW"
+  {"http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000005" "GeneOntology_MF"
+   "http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000006" "GeneOntology_CC"
+   "http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000007" "GeneOntology_BP"
+   "http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000008" "Kegg"
    "http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000009" "PPI"
    "http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000010" "HC_PPI"
    "http://kabob.ucdenver.edu/iao/hanalyzer/HAN_0000011" "LC_PPI"
@@ -346,7 +346,6 @@
       "id2term.mapping.files" (build-id2termmappings-files options)
       "ev" (build-edge-evidence-file options)
       "noa" (build-noa-files options)
-      "ew" (build-edge-weight-doi-files options)
       "doi.nodes" (build-nodes-v-neighbors-doi-file options)
       "doi.edges" (do (build-only-ppi-support-doi-file options)
                       (build-custom-edge-doi-files options)
@@ -357,6 +356,12 @@
                       (time (build-edge-experts-file options))
                       (time (build-node-ids-files options))
                       (time (build-id2termmappings-files options))
-                      (time (build-noa-files options))))
+                      (time (build-noa-files options))
+                      (time (build-edge-evidence-file options))
+                      (time (build-nodes-v-neighbors-doi-file options))
+                      (time (build-only-ppi-support-doi-fil options))
+                      (time (build-custom-edge-doi-files options))
+                      (time (build-ppi-edge-doi-files options))
+                      (time (build-edge-weight-doi-files options))))
       (exit 1 (usage summary)))))
 

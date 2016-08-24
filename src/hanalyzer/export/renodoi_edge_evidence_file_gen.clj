@@ -167,7 +167,7 @@
 
 
 (defn build-edge-evidence-file [options]
-  (build-edge-evidence-file-part options "BP" edge-evidence-file-query-bp false)
-  (build-edge-evidence-file-part options "CC" edge-evidence-file-query-cc true)
-  (build-edge-evidence-file-part options "MF" edge-evidence-file-query-mf true))
+  (build-edge-evidence-file-part options "GeneOntology_BP" edge-evidence-file-query-bp false)
+  (build-edge-evidence-file-part options "GeneOntology_CC" edge-evidence-file-query-cc true)
+  (build-edge-evidence-file-part options "GeneOntology_MF" edge-evidence-file-query-mf true))
  

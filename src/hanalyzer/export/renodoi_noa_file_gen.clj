@@ -52,7 +52,7 @@
                                #"\n"))))))))
 
 (defn build-noa-files [options]
-  (build-noa-files-for-source options "PW")
-  (build-noa-files-for-source options "BP")
-  (build-noa-files-for-source options "CC")
-  (build-noa-files-for-source options "MF"))
+  (build-noa-files-for-source options "Kegg")
+  (build-noa-files-for-source options "GeneOntology_BP")
+  (build-noa-files-for-source options "GeneOntology_CC")
+  (build-noa-files-for-source options "GeneOntology_MF"))
