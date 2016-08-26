@@ -309,6 +309,76 @@ OPTIONAL {
           
        }"))
 
+(defn id2sym-file-query-use-descriptions [options]
+ (str "PREFIX franzOption_memoryLimit: <franz:85g> 
+        PREFIX franzOption_memoryExhaustionWarningPercentage: <franz:95> 
+        PREFIX franzOption_clauseReorderer: <franz:identity> 
+        PREFIX franzOption_chunkProcessingAllowed: <franz:yes> 
+        PREFIX obo: <http://purl.obolibrary.org/obo/> 
+        PREFIX iaohan: <http://kabob.ucdenver.edu/iao/hanalyzer/> 
+        PREFIX iaovectorbase: <http://kabob.ucdenver.edu/iao/vectorbase/> 
+        PREFIX kiao: <http://kabob.ucdenver.edu/iao/> 
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        select distinct ?node ?labels {
+        VALUES ?node {"
+       (slurp (:id_file options))
+       "}
+        ?node iaohan:denotes ?bioentity .
+        ?vb_ice obo:IAO_0000219 ?bioentity .
+        ?vb_seq_id_field obo:IAO_0000219 ?vb_ice .
+        ?vb_seq_id_field kiao:hasTemplate iaovectorbase:VectorBaseFastaFileRecord_geneIdDataField1 .
+        ?record obo:BFO_0000051 ?vb_seq_id_field .
+        OPTIONAL {        
+                ?record obo:BFO_0000051 ?vb_seq_name_field .
+                ?vb_seq_name_field kiao:hasTemplate 
+                                 iaovectorbase:VectorBaseFastaFileRecord_sequenceNameDataField1 .
+                ?vb_seq_name_field obo:IAO_0000219 ?sequence_name .
+        }
+
+        BIND(REPLACE(COALESCE(?sequence_name,'no_description_available'),',',';') AS ?labels)
+          
+        }"))
+
+
+(defn id2sym-file-query-use-ids [options]
+  (str "PREFIX franzOption_memoryLimit: <franz:85g> 
+        PREFIX franzOption_memoryExhaustionWarningPercentage: <franz:95> 
+        PREFIX franzOption_clauseReorderer: <franz:identity> 
+        PREFIX franzOption_chunkProcessingAllowed: <franz:yes> 
+        PREFIX obo: <http://purl.obolibrary.org/obo/> 
+        PREFIX iaohan: <http://kabob.ucdenver.edu/iao/hanalyzer/> 
+        PREFIX iaovectorbase: <http://kabob.ucdenver.edu/iao/vectorbase/> 
+        PREFIX kiao: <http://kabob.ucdenver.edu/iao/> 
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        select distinct ?node ?labels {
+        VALUES ?node {"
+       (slurp (:id_file options))
+       "}
+        {
+             select ?node (group_concat(?node_label ; separator = ';') as ?default_labels) {
+                VALUES ?node {"
+                (slurp (:id_file options))
+               "}
+                ?node iaohan:denotes ?bioentity .
+                ?bioentity rdfs:label ?node_label .       
+              }
+              group by ?node
+        }
+OPTIONAL {      
+        ?node iaohan:denotes ?bioentity .
+        ?vb_ice obo:IAO_0000219 ?bioentity .
+        ?vb_seq_id_field obo:IAO_0000219 ?vb_ice .
+        ?vb_seq_id_field kiao:hasTemplate iaovectorbase:VectorBaseFastaFileRecord_geneIdDataField1 .
+        }
+
+        BIND(if( bound(?vb_ice), 
+                   REPLACE(REPLACE(STR(?vb_ice),
+                                         'http://kabob.ucdenver.edu/iao/vectorbase/VECTORBASE_',''),
+                                 '_ICE',''),
+                 ?default_labels) AS ?labels)
+          
+       }"))
+
 (defn id2sym-file-query [options]
  (str "PREFIX franzOption_memoryLimit: <franz:85g> 
         PREFIX franzOption_memoryExhaustionWarningPercentage: <franz:95> 
@@ -329,7 +399,7 @@ OPTIONAL {
 (defn build-node-id-to-symbol-file [options]
     (prn (str "Building node-id-to-symbol file..."))
   (let [source-connection (open-kb options)
-        sparql-string (id2sym-file-query-aael options)
+        sparql-string (id2sym-file-query-use-ids options)
         output-file-name (str (:output-directory options) "/network.geneID2Symbol.csv")]
     (clojure.java.io/make-parents output-file-name)
     (with-open [w (clojure.java.io/writer output-file-name)]
