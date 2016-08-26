@@ -33,7 +33,8 @@
        ?shared_go_edge rdf:type iaohan:HAN_0000007 . # HAN:shared_go_bp_edge
        ?shared_go_edge iaohan:commonConcept ?go .
        ?go rdfs:label ?label.
-       ?ice_id obo:IAO_0000219 ?go .
+       ?ice obo:IAO_0000219 ?go .
+       bind(replace(replace(str(?ice),'http://kabob.ucdenver.edu/iao/go/GO_','GO:'),'_ICE','') as ?ice_id)
        } group by ?ice_id"))
 
 ;;; =======================
@@ -57,7 +58,8 @@
        ?shared_go_edge rdf:type iaohan:HAN_0000006 . # HAN:shared_go_bp_edge
        ?shared_go_edge iaohan:commonConcept ?go .
        ?go rdfs:label ?label.
-       ?ice_id obo:IAO_0000219 ?go .
+       ?ice obo:IAO_0000219 ?go .
+       bind(replace(replace(str(?ice),'http://kabob.ucdenver.edu/iao/go/GO_','GO:'),'_ICE','') as ?ice_id)
        } group by ?ice_id"))
 
 ;;; =======================
@@ -82,7 +84,8 @@
        ?shared_go_edge rdf:type iaohan:HAN_0000005 . # HAN:shared_go_bp_edge
        ?shared_go_edge iaohan:commonConcept ?go .
        ?go rdfs:label ?label.
-       ?ice_id obo:IAO_0000219 ?go .
+       ?ice obo:IAO_0000219 ?go .
+       bind(replace(replace(str(?ice),'http://kabob.ucdenver.edu/iao/go/GO_','GO:'),'_ICE','') as ?ice_id)
        } group by ?ice_id"))
 
 ;;; =======================
@@ -106,7 +109,9 @@
        ?shared_pathway_edge rdf:type iaohan:HAN_0000008 . # HAN:shared_pathway_asserted_edge
        ?shared_pathway_edge iaohan:denotes ?pathway .
        ?pathway rdfs:subClassOf ?canonical_pathway .
-       ?ice_id obo:IAO_0000219 ?canonical_pathway .
+       ?ice obo:IAO_0000219 ?canonical_pathway .
+       bind(replace(replace(str(?ice),
+            'http://kabob.ucdenver.edu/iao/kegg/KEGG_PATHWAY_',''),'_ICE','') as ?ice_id)
        ?canonical_pathway rdfs:label ?label .
        } group by ?ice_id"))
 
@@ -125,7 +130,8 @@
           (visit-sparql source-connection
                         (fn [bindings]
                           (.write w (str
-                                     (sym-to-long-name ('?/ice_id bindings))
+                                     ;;(sym-to-long-name ('?/ice_id bindings))
+                                     ('?/ice_id bindings)
                                      "\t"
                                      ('?/labels bindings)
                                      "\n")))

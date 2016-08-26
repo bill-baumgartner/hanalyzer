@@ -26,7 +26,7 @@
         PREFIX iaohan: <http://kabob.ucdenver.edu/iao/hanalyzer/> 
         PREFIX owl: <http://www.w3.org/2002/07/owl#> 
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-        select ?node (group_concat(distinct ?ice_id ; separator = ',') as ?ice_ids) {
+        select ?node (group_concat(distinct ?pw_id ; separator = ',') as ?ice_ids) {
         VALUES ?node {"
        (slurp (:id_file options))
        "}
@@ -35,6 +35,8 @@
        ?shared_pathway_edge iaohan:denotes ?pathway .
        ?pathway rdfs:subClassOf ?canonical_pathway .
        ?ice_id obo:IAO_0000219 ?canonical_pathway .
+       bind(replace(replace(str(?ice_id),
+            'http://kabob.ucdenver.edu/iao/kegg/KEGG_PATHWAY_',''),'_ICE','') as ?pw_id)  
        }
        group by ?node"))
 
@@ -51,7 +53,7 @@
         PREFIX iaohan: <http://kabob.ucdenver.edu/iao/hanalyzer/> 
         PREFIX owl: <http://www.w3.org/2002/07/owl#> 
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-        select ?node (group_concat(distinct ?ice_id ; separator = ',') as ?ice_ids) {
+        select ?node (group_concat(distinct ?go_id ; separator = ',') as ?ice_ids) {
         VALUES ?node {"
        (slurp (:id_file options))
        "}
@@ -59,12 +61,14 @@
        ?shared_go_edge rdf:type iaohan:HAN_0000007 . # HAN:shared_go_bp_edge
        ?shared_go_edge iaohan:commonConcept ?go .
        ?ice_id obo:IAO_0000219 ?go .
+       bind(replace(replace(str(?ice_id),
+            'http://kabob.ucdenver.edu/iao/go/GO_','GO:'),'_ICE','') as ?go_id)       
        }
        group by ?node"))
 
 
 ;;; =======================
-;;; Biological Process query
+;;; Cellular Component query
 ;;; =======================
 
 (defn- go-cc-nodeIds-files-query [options]
@@ -76,7 +80,7 @@
         PREFIX iaohan: <http://kabob.ucdenver.edu/iao/hanalyzer/> 
         PREFIX owl: <http://www.w3.org/2002/07/owl#> 
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-        select ?node (group_concat(distinct ?ice_id ; separator = ',') as ?ice_ids) {
+        select ?node (group_concat(distinct ?go_id ; separator = ',') as ?ice_ids) {
         VALUES ?node {"
        (slurp (:id_file options))
        "}
@@ -84,9 +88,14 @@
        ?shared_go_edge rdf:type iaohan:HAN_0000006 . # HAN:shared_go_cc_edge
        ?shared_go_edge iaohan:commonConcept ?go .
        ?ice_id obo:IAO_0000219 ?go .       
+       bind(replace(replace(str(?ice_id),
+            'http://kabob.ucdenver.edu/iao/go/GO_','GO:'),'_ICE','') as ?go_id)
        }
        group by ?node"))
 
+;;; =======================
+;;; Molecular Function query
+;;; =======================
 
 (defn- go-mf-nodeIds-files-query [options]
   (str "PREFIX franzOption_memoryLimit: <franz:85g> 
@@ -98,7 +107,7 @@
         PREFIX iaogoa: <http://kabob.ucdenver.edu/iao/goa/> 
         PREFIX owl: <http://www.w3.org/2002/07/owl#> 
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
-        select ?node (group_concat(distinct ?ice_id ; separator = ',') as ?ice_ids) {
+        select ?node (group_concat(distinct ?go_id ; separator = ',') as ?ice_ids) {
         VALUES ?node {"
        (slurp (:id_file options))
        "}
@@ -106,9 +115,11 @@
        ?shared_go_edge rdf:type iaohan:HAN_0000005 . # HAN:shared_go_mf_edge
        ?shared_go_edge iaohan:commonConcept ?go .
        ?ice_id obo:IAO_0000219 ?go .
+       bind(replace(replace(str(?ice_id),
+            'http://kabob.ucdenver.edu/iao/go/GO_','GO:'),'_ICE','') as ?go_id)
        } group by ?node"))
 
-(defn- build-node-ids-file [options source-string query-string-fn]
+(defn- build-node-ids-file [options source-string query-string-fn urlbase urlend]
     (prn (str "Building NodeIds file [" source-string "]..."))
   (let [source-connection (open-kb options)
         sparql-string (query-string-fn options)
@@ -117,7 +128,7 @@
                               source-string ".NodeIds.txt")]
     (clojure.java.io/make-parents output-file-name)
     (with-open [w (clojure.java.io/writer output-file-name)]
-      (.write w (str source-string " URLBASE:http://not/specified URLEND:\n"))
+      (.write w (str source-string " URLBASE:" urlbase " URLEND:" urlend "\n"))
       (.write w (str "Mapping File: network." source-string ".Id2TermMappings.txt\n"))
       (try
         (binding [*kb* source-connection
@@ -133,7 +144,11 @@
 
 
 (defn build-node-ids-files [options]
-  (build-node-ids-file options "Kegg" pathway-nodeIds-files-query)
-  (build-node-ids-file options "GeneOntology_BP" go-bp-nodeIds-files-query)
-  (build-node-ids-file options "GeneOntology_CC" go-cc-nodeIds-files-query)
-  (build-node-ids-file options "GeneOntology_MF" go-mf-nodeIds-files-query))
+  (build-node-ids-file options "Kegg" pathway-nodeIds-files-query
+                       "http://www.genome.ad.jp/dbget-bin/www_bget?pathway+aag" "")
+  (build-node-ids-file options "GeneOntology_BP" go-bp-nodeIds-files-query
+                       "http://amigo.geneontology.org/amigo/term/" "")
+  (build-node-ids-file options "GeneOntology_CC" go-cc-nodeIds-files-query
+                       "http://amigo.geneontology.org/amigo/term/" "")
+  (build-node-ids-file options "GeneOntology_MF" go-mf-nodeIds-files-query
+                       "http://amigo.geneontology.org/amigo/term/" ""))
