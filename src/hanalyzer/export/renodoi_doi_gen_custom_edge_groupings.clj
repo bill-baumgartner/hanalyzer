@@ -44,6 +44,138 @@
                     || ?other_edge_type = iaohan:HAN_0000005))
         }"))
 
+(defn- pw-custom-edge-grouping-doi-file-query [options]
+  (str "PREFIX franzOption_memoryLimit: <franz:85g> 
+        PREFIX franzOption_memoryExhaustionWarningPercentage: <franz:95> 
+        PREFIX franzOption_clauseReorderer: <franz:identity> 
+        PREFIX franzOption_chunkProcessingAllowed: <franz:yes> 
+        PREFIX obo: <http://purl.obolibrary.org/obo/> 
+        PREFIX iaohan: <http://kabob.ucdenver.edu/iao/hanalyzer/> 
+        PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+        select distinct ?node1 ?node2 {
+        VALUES ?node1 {"
+        (slurp (:id_file options))
+        "}
+        VALUES ?node2 {"
+        (slurp (:id_file options))
+        "}
+        ?pw_edge rdf:type iaohan:HAN_0000008 . # HAN:shared_pw_edge
+        ?pw_edge iaohan:linksNode ?node1 .
+        ?pw_edge iaohan:linksNode ?node2 .
+
+        FILTER (?node1 != ?node2 
+                && STR(IRI(?node1)) < STR(IRI(?node2)))
+        }"))
+
+(defn- go-custom-edge-grouping-doi-file-query [options]
+  (str "PREFIX franzOption_memoryLimit: <franz:85g> 
+        PREFIX franzOption_memoryExhaustionWarningPercentage: <franz:95> 
+        PREFIX franzOption_clauseReorderer: <franz:identity> 
+        PREFIX franzOption_chunkProcessingAllowed: <franz:yes> 
+        PREFIX obo: <http://purl.obolibrary.org/obo/> 
+        PREFIX iaohan: <http://kabob.ucdenver.edu/iao/hanalyzer/> 
+        PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+        select distinct ?node1 ?node2 {
+        VALUES ?node1 {"
+        (slurp (:id_file options))
+        "}
+        VALUES ?node2 {"
+        (slurp (:id_file options))
+        "}
+        
+        ?go_edge iaohan:linksNode ?node1 .
+        ?go_edge iaohan:linksNode ?node2 .
+        ?go_edge rdf:type ?type .
+        
+        FILTER (?node1 != ?node2 
+                && STR(IRI(?node1)) < STR(IRI(?node2))
+                && (?type = iaohan:HAN_0000007 
+                    || ?type = iaohan:HAN_0000006
+                    || ?type = iaohan:HAN_0000005))
+        }"))
+
+
+(defn- go-bp-custom-edge-grouping-doi-file-query [options]
+  (str "PREFIX franzOption_memoryLimit: <franz:85g> 
+        PREFIX franzOption_memoryExhaustionWarningPercentage: <franz:95> 
+        PREFIX franzOption_clauseReorderer: <franz:identity> 
+        PREFIX franzOption_chunkProcessingAllowed: <franz:yes> 
+        PREFIX obo: <http://purl.obolibrary.org/obo/> 
+        PREFIX iaohan: <http://kabob.ucdenver.edu/iao/hanalyzer/> 
+        PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+        select distinct ?node1 ?node2 {
+        VALUES ?node1 {"
+        (slurp (:id_file options))
+        "}
+        VALUES ?node2 {"
+        (slurp (:id_file options))
+        "}
+        
+        ?go_edge iaohan:linksNode ?node1 .
+        ?go_edge iaohan:linksNode ?node2 .
+        ?go_edge rdf:type ?type .
+        
+        FILTER (?node1 != ?node2 
+                && STR(IRI(?node1)) < STR(IRI(?node2))
+                && ?type = iaohan:HAN_0000007)
+        }"))
+
+
+(defn- go-mf-custom-edge-grouping-doi-file-query [options]
+  (str "PREFIX franzOption_memoryLimit: <franz:85g> 
+        PREFIX franzOption_memoryExhaustionWarningPercentage: <franz:95> 
+        PREFIX franzOption_clauseReorderer: <franz:identity> 
+        PREFIX franzOption_chunkProcessingAllowed: <franz:yes> 
+        PREFIX obo: <http://purl.obolibrary.org/obo/> 
+        PREFIX iaohan: <http://kabob.ucdenver.edu/iao/hanalyzer/> 
+        PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+        select distinct ?node1 ?node2 {
+        VALUES ?node1 {"
+        (slurp (:id_file options))
+        "}
+        VALUES ?node2 {"
+        (slurp (:id_file options))
+        "}
+        
+        ?go_edge iaohan:linksNode ?node1 .
+        ?go_edge iaohan:linksNode ?node2 .
+        ?go_edge rdf:type ?type .
+        
+        FILTER (?node1 != ?node2 
+                && STR(IRI(?node1)) < STR(IRI(?node2))
+                && ?type = iaohan:HAN_0000005)
+        }"))
+
+(defn- go-cc-custom-edge-grouping-doi-file-query [options]
+  (str "PREFIX franzOption_memoryLimit: <franz:85g> 
+        PREFIX franzOption_memoryExhaustionWarningPercentage: <franz:95> 
+        PREFIX franzOption_clauseReorderer: <franz:identity> 
+        PREFIX franzOption_chunkProcessingAllowed: <franz:yes> 
+        PREFIX obo: <http://purl.obolibrary.org/obo/> 
+        PREFIX iaohan: <http://kabob.ucdenver.edu/iao/hanalyzer/> 
+        PREFIX owl: <http://www.w3.org/2002/07/owl#> 
+        PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
+        select distinct ?node1 ?node2 {
+        VALUES ?node1 {"
+        (slurp (:id_file options))
+        "}
+        VALUES ?node2 {"
+        (slurp (:id_file options))
+        "}
+        
+        ?go_edge iaohan:linksNode ?node1 .
+        ?go_edge iaohan:linksNode ?node2 .
+        ?go_edge rdf:type ?type .
+        
+        FILTER (?node1 != ?node2 
+                && STR(IRI(?node1)) < STR(IRI(?node2))
+                && ?type = iaohan:HAN_0000006)
+        }"))
+
 (defn- seed-edges-grouping-doi-file-query [options]
   (str "PREFIX franzOption_memoryLimit: <franz:85g> 
         PREFIX franzOption_memoryExhaustionWarningPercentage: <franz:95> 
@@ -93,6 +225,13 @@
 
 (defn build-custom-edge-doi-files [options]
   (build-custom-edge-doi-file options "pw+go" pw-go-custom-edge-grouping-doi-file-query)
+  (build-custom-edge-doi-file options "go" pw-custom-edge-grouping-doi-file-query)
+  (build-custom-edge-doi-file options "pw" go-custom-edge-grouping-doi-file-query)
+
+  (build-custom-edge-doi-file options "go-bp" go-bp-custom-edge-grouping-doi-file-query)
+  (build-custom-edge-doi-file options "go-cc" go-cc-custom-edge-grouping-doi-file-query)
+  (build-custom-edge-doi-file options "go-mf" go-mf-custom-edge-grouping-doi-file-query)
+  
  ;;designed to be run on the seed network to produce the set of edges
  ;;involving only the seed nodes (no neighbors), hence the file-label
  ;;of 'seeds'
