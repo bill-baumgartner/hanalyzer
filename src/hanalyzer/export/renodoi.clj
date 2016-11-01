@@ -177,11 +177,11 @@
         PREFIX owl: <http://www.w3.org/2002/07/owl#> 
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
         select ?id_ice ?node {
-           VALUES ?id_ice {"
+           VALUES ?node {"
               (slurp (:id_file options))
            "}
-            ?id_ice obo:IAO_0000219 ?bioentity .
-            ?node iaohan:denotes ?bioentity .
+             ?node iaohan:denotes ?bioentity .            
+             ?id_ice obo:IAO_0000219 ?bioentity .
           }"))
 
 
@@ -216,11 +216,9 @@
         PREFIX owl: <http://www.w3.org/2002/07/owl#> 
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> 
         select distinct ?neighbor_node {
-           VALUES ?id_ice {"
+           VALUES ?node {"
               (slurp (:id_file options))
            "}
-            ?id_ice obo:IAO_0000219 ?bioentity .
-            ?node iaohan:denotes ?bioentity .
             ?master_edge iaohan:linksNode ?node .
             ?master_edge rdf:type iaohan:HAN_0000001 . # HAN:master_edge
             ?master_edge iaohan:asserted_by ?asserting_sources .
@@ -238,20 +236,17 @@
 (defn build-nodes-plus-neighbors-file [options]
     (prn (str "Building nodes+neighbors file..."))
   (let [source-connection (open-kb options)
-        node-sparql-string (node-query options)
+       ;; node-sparql-string (node-query options)
         neighbor-sparql-string (node-neighbors-query options)
         output-file-name (str (:output-directory options) "/nodes+neighbors.uri")]
     (clojure.java.io/make-parents output-file-name)
     (with-open [w (clojure.java.io/writer output-file-name)]
+      ;; write the nodes to file (neighbors get appended below)
+      (doall (map #(.write w (str % "\n")) (string/split-lines (slurp (:id_file options)))))
       (try
-        ;; get the seed nodes and write to output file
         (binding [*kb* source-connection
                   edu.ucdenver.ccp.kr.rdf/*use-inference* false]
-          (visit-sparql source-connection
-                        (fn [bindings]
-                          (.write w (str "<" (sym-to-long-name ('?/node bindings)) ">\n")))
-                        node-sparql-string)
-          ;; then get the neighbors of the seed nodes and write to the output file
+          ;; get the neighbors of the seed nodes and write to the output file
           (visit-sparql source-connection
                         (fn [bindings]
                           (.write w (str "<" (sym-to-long-name ('?/neighbor_node bindings)) ">\n")))
